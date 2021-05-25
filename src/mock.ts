@@ -1,5 +1,5 @@
 import type { DOMWidgetModel } from '@jupyter-widgets/base';
-import App from './App.svelte';
+import BBoxWidget from './BBoxWidget.svelte';
 
 class MockModel {
   set() {}
@@ -8,7 +8,7 @@ class MockModel {
   save_changes() {}
 }
 
-const app = new App({
+const app = new BBoxWidget({
   target: document.body,
   props: {
     model: (new MockModel() as unknown) as DOMWidgetModel,
