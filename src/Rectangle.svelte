@@ -24,11 +24,11 @@
 
 function startMoving(event: MouseEvent) {
     event.stopPropagation()
-    dispatch('move')
     movingX0 = event.clientX
     movingY0 = event.clientY
     startX = x
     startY = y
+    dispatch('moveFn', move)
 }
 
 export function move(event: MouseEvent) {
@@ -40,7 +40,6 @@ export function move(event: MouseEvent) {
 
 function startResizing(event: MouseEvent, edge:string) {
     event.stopPropagation()
-    dispatch('resize')
     resizeX = false
     resizeY = false
     if (edge.includes("top")) {
@@ -57,6 +56,7 @@ function startResizing(event: MouseEvent, edge:string) {
         resizeX = true
         startX = x
     }
+    dispatch('moveFn', resize)
 }
 
 export function resize(event: MouseEvent) {
@@ -90,6 +90,7 @@ onMount(()=>{
     movingY0 = y
     resizeX = true
     resizeY = true
+    dispatch('create', resize)
 })
 
 $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]

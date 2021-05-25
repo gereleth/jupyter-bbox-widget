@@ -28,18 +28,17 @@
   }
 
   let label = ''
-  let rectElements:any[] = []
   let moveFn = null
+  let createdFromUI = false
 
-  async function handleMouseDown(event: MouseEvent) {
+  function handleMouseDown(event: MouseEvent) {
     event.preventDefault()
     const rect = getImageCoordinates(event)
     rect.width = 0
     rect.height = 0
     rect.label = label
+    createdFromUI = true
     $rects = [...$rects, rect]
-    await tick()
-    moveFn = rectElements[rectElements.length-1].resize
   }
 
   function handleMouseUp(event: MouseEvent) {
@@ -62,13 +61,18 @@
     $rects = [...$rects, dummy]
     $rects = $rects.slice(0, -1)
   }
-  async function remove(r) {
+  function remove(r) {
     $rects = $rects.filter(x=>x!==r)
-    await tick()
-    rectElements = rectElements.filter(x=>x!==null)
   }
-  
+  function onCreateRect(event) {
+    if (createdFromUI) {
+      moveFn = event.detail
+      createdFromUI = false
+    }
+  }
+  // choose first class as label when classes change
   $: label = $classes.length>0 ? $classes[0] : ''
+  // clear bboxes when image changes
   $: $image, $rects = [];
 </script>
 
@@ -96,13 +100,12 @@
         bind:width={r.width} 
         bind:height={r.height} 
         bind:label={r.label}
-        bind:this={rectElements[i]}
         toImageCoordinates={getImageCoordinates}
         classes={$classes}
         colors={$colors}
         on:remove={()=>remove(r)}
-        on:move={()=>moveFn=rectElements[i].move}
-        on:resize={()=>moveFn=rectElements[i].resize}
+        on:moveFn={(event)=>moveFn=event.detail}
+        on:create={onCreateRect}
         on:class={()=>{r.label=label; updateRects()}}
         />
       </g>
