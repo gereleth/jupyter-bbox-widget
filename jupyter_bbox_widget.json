@@ -1,0 +1,5 @@
+{
+  "load_extensions": {
+    "jupyter_bbox_widget/extension": true
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "name": "jupyter-bbox-widget",
+  "version": "0.1.0",
+  "description": "A Jupyter widget for annotating images with bounding boxes",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "widgets"
+  ],
+  "files": [
+    "lib/**/*.js",
+    "dist/*.js"
+  ],
+  "homepage": "https://github.com//jupyter-bbox-widget",
+  "bugs": {
+    "url": "https://github.com//jupyter-bbox-widget/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "gereleth",
+    "email": "daria.voznyak@gmail.com"
+  },
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com//jupyter-bbox-widget"
+  },
+  "scripts": {
+    "build": "npm run build:nbextension",
+    "build:labextension": "npm run clean:labextension && mkdirp jupyter_bbox_widget/labextension && cd jupyter_bbox_widget/labextension && npm pack ../..",
+    "build:nbextension": "webpack --mode=production",
+    "build:all": "npm run build:labextension && npm run build:nbextension",
+    "clean": "npm run clean:lib && npm run clean:nbextension",
+    "clean:lib": "rimraf lib",
+    "clean:labextension": "rimraf jupyter_bbox_widget/labextension",
+    "clean:nbextension": "rimraf jupyter_bbox_widget/nbextension/static/index.js",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "lint:check": "eslint . --ext .ts,.tsx",
+    "prepack": "npm run build",
+    "watch": "npm-run-all -p watch:*",
+    "watch:nbextension": "webpack --watch",
+    "dev": "webpack-cli serve --inline --hot --progress --content-base ./mock --open -o ./mock"
+  },
+  "dependencies": {
+    "@jupyter-widgets/base": "^1.1.10 || ^2 || ^3"
+  },
+  "devDependencies": {
+    "@phosphor/application": "^1.6.0",
+    "@phosphor/widgets": "^1.6.0",
+    "@types/node": "^10.11.6",
+    "@types/webpack-env": "^1.13.6",
+    "@typescript-eslint/eslint-plugin": "^3.6.0",
+    "@typescript-eslint/parser": "^3.6.0",
+    "@tsconfig/svelte": "^1.0.10",
+    "@webpack-cli/serve": "^1.2.2",
+    "acorn": "^7.2.0",
+    "css-loader": "^3.2.0",
+    "eslint": "^7.4.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "fs-extra": "^7.0.0",
+    "mkdirp": "^0.5.1",
+    "npm-run-all": "^4.1.3",
+    "prettier": "^2.0.5",
+    "rimraf": "^2.6.2",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^1.0.0",
+    "ts-loader": "^5.2.1",
+    "typescript": "^4.2.4",
+    "webpack": "^5.20.1",
+    "webpack-cli": "^4.4.0",
+    "webpack-dev-server": "^3.11.2",
+    "svelte": "^3.0.0",
+    "svelte-loader": "2.13.3",
+    "svelte-preprocess": "^4.7.0"
+  },
+  "jupyterlab": {
+    "extension": "lib/plugin"
+  }
+}
