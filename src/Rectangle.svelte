@@ -34,8 +34,8 @@ function startMoving(event: MouseEvent) {
 export function move(event: MouseEvent) {
     const dx = event.clientX - movingX0
     const dy = event.clientY - movingY0
-    x = startX + dx
-    y = startY + dy
+    x = Math.round(startX + dx)
+    y = Math.round(startY + dy)
 }
 
 function startResizing(event: MouseEvent, edge:string) {
@@ -61,8 +61,8 @@ function startResizing(event: MouseEvent, edge:string) {
 
 export function resize(event: MouseEvent) {
     const imc = toImageCoordinates(event)
-    const xm = imc.x
-    const ym = imc.y
+    const xm = Math.round(imc.x)
+    const ym = Math.round(imc.y)
     if (resizeX) {
         x = Math.min(startX, xm)
         width = Math.max(startX, xm) - x

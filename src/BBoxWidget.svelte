@@ -33,10 +33,11 @@
 
   function handleMouseDown(event: MouseEvent) {
     event.preventDefault()
-    const rect = getImageCoordinates(event)
-    rect.width = 0
-    rect.height = 0
-    rect.label = label
+    const {x, y} = getImageCoordinates(event)
+    const rect = {
+      x: Math.round(x), y:Math.round(y), 
+      width:0, height:0, label:label
+    }
     createdFromUI = true
     $rects = [...$rects, rect]
   }
@@ -73,7 +74,7 @@
   // choose first class as label when classes change
   $: label = $classes.length>0 ? $classes[0] : ''
   // clear bboxes when image changes
-  $: $image, $rects = [];
+  // $: $image, $rects = [];
 </script>
 
 <div class="wrapper">
