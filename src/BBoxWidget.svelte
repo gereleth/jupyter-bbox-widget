@@ -1,22 +1,31 @@
 <script lang="ts">
-  import Rectangle from './Rectangle.svelte';
+  import BBox from './BBox.svelte';
   import { createValue } from './stores';
   import { fade } from 'svelte/transition';
+  import type { Writable } from 'svelte/store';
 
   export let model;
   let img:HTMLImageElement
   let imgHeight = 0
   let imgWidth = 0
 
+  type TBBox = {
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    label: string,
+  }
+
   // Creates a Svelte store (https://svelte.dev/tutorial/writable-stores) 
   // that syncs with the named Traitlet in widget.ts and example.py.
-  let image = createValue(model, 'image', '')
-  let classes = createValue(model, 'classes', [''])
-  let colors = createValue(model, 'colors', [
+  let image:Writable<string> = createValue(model, 'image', '')
+  let classes:Writable<string[]> = createValue(model, 'classes', [''])
+  let colors:Writable<string[]> = createValue(model, 'colors', [
         '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', 
         '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
       ])
-  let rects = createValue(model, 'bboxes', [])
+  let bboxes:Writable<TBBox[]> = createValue(model, 'bboxes', [])
 
   function getImageCoordinates(event: MouseEvent) {
     const rect = img.getBoundingClientRect()
@@ -33,18 +42,18 @@
   function handleMouseDown(event: MouseEvent) {
     event.preventDefault()
     const {x, y} = getImageCoordinates(event)
-    const rect = {
+    const bbox = {
       x: Math.round(x), y:Math.round(y), 
       width:0, height:0, label:label
     }
     createdFromUI = true
-    $rects = [...$rects, rect]
+    $bboxes = [...$bboxes, bbox]
   }
 
   function handleMouseUp(event: MouseEvent) {
     event.preventDefault()
     moveFn = null
-    updateRects()
+    updateBBoxes()
   }
 
   function handleMouseMove(event: MouseEvent) {
@@ -53,18 +62,18 @@
       moveFn(event)
     }
   }
-  function updateRects() {
+  function updateBBoxes() {
     // python value doesn't get updated unless length of array changes
     // don't know why
-    // I add and remove a dummy bbox to transfer changes
+    // I add and remove a dummy bbox to transfer changes to python
     const dummy = {x:0,y:0,width:0,height:0,label:''}
-    $rects = [...$rects, dummy]
-    $rects = $rects.slice(0, -1)
+    $bboxes = [...$bboxes, dummy]
+    $bboxes = $bboxes.slice(0, -1)
   }
-  function remove(r) {
-    $rects = $rects.filter(x=>x!==r)
+  function remove(b:TBBox):void {
+    $bboxes = $bboxes.filter(x=>x!==b)
   }
-  function onCreateRect(event) {
+  function onCreateRect(event: CustomEvent) {
     if (createdFromUI) {
       moveFn = event.detail
       createdFromUI = false
@@ -90,21 +99,21 @@
     on:mousemove={handleMouseMove}
     on:mouseup={handleMouseUp}
     >
-    {#each $rects as r, i}
+    {#each $bboxes as bbox, i}
     <g transition:fade={{duration:200}}>
-      <Rectangle 
-        bind:x={r.x} 
-        bind:y={r.y} 
-        bind:width={r.width} 
-        bind:height={r.height} 
-        bind:label={r.label}
+      <BBox 
+        bind:x={bbox.x} 
+        bind:y={bbox.y} 
+        bind:width={bbox.width} 
+        bind:height={bbox.height} 
+        bind:label={bbox.label}
         toImageCoordinates={getImageCoordinates}
         classes={$classes}
         colors={$colors}
-        on:remove={()=>remove(r)}
-        on:moveFn={(event)=>moveFn=event.detail}
+        on:remove={()=>remove(bbox)}
+        on:move={(event)=>moveFn=event.detail}
         on:create={onCreateRect}
-        on:class={()=>{r.label=label; updateRects()}}
+        on:label={()=>{bbox.label=label; updateBBoxes()}}
         />
       </g>
     {/each}

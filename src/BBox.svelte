@@ -28,10 +28,10 @@ function startMoving(event: MouseEvent) {
     movingY0 = event.clientY
     startX = x
     startY = y
-    dispatch('moveFn', move)
+    dispatch('move', move)
 }
 
-export function move(event: MouseEvent) {
+function move(event: MouseEvent) {
     const dx = event.clientX - movingX0
     const dy = event.clientY - movingY0
     x = Math.round(startX + dx)
@@ -56,10 +56,10 @@ function startResizing(event: MouseEvent, edge:string) {
         resizeX = true
         startX = x
     }
-    dispatch('moveFn', resize)
+    dispatch('move', resize)
 }
 
-export function resize(event: MouseEvent) {
+function resize(event: MouseEvent) {
     const imc = toImageCoordinates(event)
     const xm = Math.round(imc.x)
     const ym = Math.round(imc.y)
@@ -78,9 +78,9 @@ function remove(event: MouseEvent) {
     dispatch('remove')
 }
 
-function reclassify(event: MouseEvent) {
+function relabel(event: MouseEvent) {
     event.stopPropagation()
-    dispatch('class')
+    dispatch('label')
 }
 
 onMount(()=>{
@@ -140,7 +140,7 @@ $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]
     class="bottom-right"
     on:mousedown={e=>startResizing(e, "bottom-right")}
     />
-<text x="{x}" y="{y-4}" fill="{color}" on:mousedown={reclassify}>{label}</text>
+<text x="{x}" y="{y-4}" fill="{color}" on:mousedown={relabel}>{label}</text>
 <text x="{x+width-13}" y="{y-4}" fill="{color}" on:mousedown={remove}>🗙</text>
 
 <style>
