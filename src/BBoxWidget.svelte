@@ -1,7 +1,6 @@
 <script lang="ts">
   import Rectangle from './Rectangle.svelte';
   import { createValue } from './stores';
-  import { tick } from 'svelte';
   import { fade } from 'svelte/transition';
 
   export let model;
