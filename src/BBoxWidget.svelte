@@ -73,8 +73,6 @@
   }
   // choose first class as label when classes change
   $: label = $classes.length>0 ? $classes[0] : ''
-  // clear bboxes when image changes
-  // $: $image, $rects = [];
 </script>
 
 <div class="wrapper">
