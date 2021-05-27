@@ -8,6 +8,9 @@
   let img:HTMLImageElement
   let imgHeight = 0
   let imgWidth = 0
+  let naturalHeight = 0
+  let naturalWidth = 0
+  let showSVG = false
 
   type TBBox = {
     x: number,
@@ -29,15 +32,20 @@
 
   function getImageCoordinates(event: MouseEvent) {
     const rect = img.getBoundingClientRect()
-    return {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
-    }
+    const x = (event.clientX - rect.left)*naturalWidth/imgWidth;
+    const y = (event.clientY - rect.top)*naturalHeight/imgHeight;
+    return { x: x, y: y }
   }
 
   let label = ''
   let moveFn = null
   let createdFromUI = false
+
+  function initSVG() {
+    showSVG = true
+    naturalWidth = img.naturalWidth
+    naturalHeight = img.naturalHeight
+  }
 
   function handleMouseDown(event: MouseEvent) {
     event.preventDefault()
@@ -91,33 +99,37 @@
     <img src="{$image}" 
       alt="annotate me" 
       bind:this={img}
+      on:load={initSVG}
   />
   </div>
-  
-  <svg width="{imgWidth}" height="{imgHeight}"
-    on:mousedown={handleMouseDown}
-    on:mousemove={handleMouseMove}
-    on:mouseup={handleMouseUp}
-    >
-    {#each $bboxes as bbox, i}
-    <g transition:fade={{duration:200}}>
-      <BBox 
-        bind:x={bbox.x} 
-        bind:y={bbox.y} 
-        bind:width={bbox.width} 
-        bind:height={bbox.height} 
-        bind:label={bbox.label}
-        toImageCoordinates={getImageCoordinates}
-        classes={$classes}
-        colors={$colors}
-        on:remove={()=>remove(bbox)}
-        on:move={(event)=>moveFn=event.detail}
-        on:create={onCreateRect}
-        on:label={()=>{bbox.label=label; updateBBoxes()}}
-        />
-      </g>
-    {/each}
-  </svg>
+  {#if showSVG}
+    <svg width="{imgWidth}" height="{imgHeight}"
+      on:mousedown={handleMouseDown}
+      on:mousemove={handleMouseMove}
+      on:mouseup={handleMouseUp}
+      >
+      {#each $bboxes as bbox, i}
+      <g transition:fade={{duration:100}}>
+        <BBox 
+          bind:x={bbox.x} 
+          bind:y={bbox.y} 
+          bind:width={bbox.width} 
+          bind:height={bbox.height} 
+          bind:label={bbox.label}
+          toImageCoordinates={getImageCoordinates}
+          classes={$classes}
+          colors={$colors}
+          scaleX={imgWidth/naturalWidth}
+          scaleY={imgHeight/naturalHeight}
+          on:remove={()=>remove(bbox)}
+          on:move={(event)=>moveFn=event.detail}
+          on:create={onCreateRect}
+          on:label={()=>{bbox.label=label; updateBBoxes()}}
+          />
+        </g>
+      {/each}
+    </svg>
+  {/if}
   <div class="classes">
     <p>Classes:</p>
     {#each $classes as _class, i}

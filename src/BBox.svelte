@@ -11,6 +11,8 @@
     export let strokeWidth = 2
     export let opacity = 0
     export let toImageCoordinates
+    export let scaleX = 1
+    export let scaleY = 1
 
     const dispatch = createEventDispatcher()
 
@@ -32,8 +34,8 @@ function startMoving(event: MouseEvent) {
 }
 
 function move(event: MouseEvent) {
-    const dx = event.clientX - movingX0
-    const dy = event.clientY - movingY0
+    const dx = (event.clientX - movingX0)/scaleX
+    const dy = (event.clientY - movingY0)/scaleY
     x = Math.round(startX + dx)
     y = Math.round(startY + dy)
 }
@@ -97,51 +99,51 @@ $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]
 </script>
 
 
-<rect width="{width}" 
-    height="{height}"
+<rect width="{width*scaleX}" 
+    height="{height*scaleY}"
     style="fill-opacity:{opacity};stroke-width:{strokeWidth};stroke:{color};" 
-    x={x}
-    y={y}
+    x={x*scaleX}
+    y={y*scaleY}
     on:mousedown={startMoving}
     />
-<line x1="{x}" y1="{y}" x2="{x+width}" y2="{y}" 
+<line x1="{x*scaleX}" y1="{y*scaleY}" x2="{(x+width)*scaleX}" y2="{y*scaleY}" 
     style="stroke-width:10px;stroke:black;stroke-opacity:0" 
     class="top"
     on:mousedown={e=>startResizing(e, "top")}
     />
-<line x1="{x}" y1="{y+height}" x2="{x+width}" y2="{y+height}" 
+<line x1="{x*scaleX}" y1="{(y+height)*scaleY}" x2="{(x+width)*scaleX}" y2="{(y+height)*scaleY}" 
     style="stroke-width:10px;stroke:black;stroke-opacity:0" 
     class="bottom"
     on:mousedown={e=>startResizing(e, "bottom")}
     />
-<line x1="{x}" y1="{y}" x2="{x}" y2="{y+height}" 
+<line x1="{x*scaleX}" y1="{y*scaleY}" x2="{x*scaleX}" y2="{(y+height)*scaleY}" 
     style="stroke-width:10px;stroke:black;stroke-opacity:0" 
     class="left"
     on:mousedown={e=>startResizing(e, "left")}
     />
-<line x1="{x+width}" y1="{y}" x2="{x+width}" y2="{y+height}" 
+<line x1="{(x+width)*scaleX}" y1="{y*scaleY}" x2="{(x+width)*scaleX}" y2="{(y+height)*scaleY}" 
     style="stroke-width:10px;stroke:black;stroke-opacity:0" 
     class="right"
     on:mousedown={e=>startResizing(e, "right")}
     />
-<circle cx={x} cy={y} r={6} fill-opacity="0"
+<circle cx={x*scaleX} cy={y*scaleY} r={6} fill-opacity="0"
     class="top-left"
     on:mousedown={e=>startResizing(e, "top-left")}
     />
-<circle cx={x+width} cy={y} r={6} fill-opacity="0"
+<circle cx={(x+width)*scaleX} cy={y*scaleY} r={6} fill-opacity="0"
     class="top-right"
     on:mousedown={e=>startResizing(e, "top-right")}
     />
-<circle cx={x} cy={y+height} r={6} fill-opacity="0"
+<circle cx={x*scaleX} cy={(y+height)*scaleY} r={6} fill-opacity="0"
     class="bottom-left"
     on:mousedown={e=>startResizing(e, "bottom-left")}
     />
-<circle cx={x+width} cy={y+height} r={6} fill-opacity="0"
+<circle cx={(x+width)*scaleX} cy={(y+height)*scaleY} r={6} fill-opacity="0"
     class="bottom-right"
     on:mousedown={e=>startResizing(e, "bottom-right")}
     />
-<text x="{x}" y="{y-4}" fill="{color}" on:mousedown={relabel}>{label}</text>
-<text x="{x+width-13}" y="{y-4}" fill="{color}" on:mousedown={remove}>🗙</text>
+<text x="{x*scaleX}" y="{y*scaleY-4}" fill="{color}" on:mousedown={relabel}>{label}</text>
+<text x="{(x+width)*scaleX-13}" y="{y*scaleY-4}" fill="{color}" on:mousedown={remove}>🗙</text>
 
 <style>
     rect {
