@@ -26,6 +26,7 @@
 
 function startMoving(event: MouseEvent) {
     event.stopPropagation()
+    event.preventDefault()
     movingX0 = event.clientX
     movingY0 = event.clientY
     startX = x
@@ -34,6 +35,8 @@ function startMoving(event: MouseEvent) {
 }
 
 function move(event: MouseEvent) {
+    event.stopPropagation()
+    event.preventDefault()
     const dx = (event.clientX - movingX0)/scaleX
     const dy = (event.clientY - movingY0)/scaleY
     x = Math.round(startX + dx)
@@ -42,6 +45,7 @@ function move(event: MouseEvent) {
 
 function startResizing(event: MouseEvent, edge:string) {
     event.stopPropagation()
+    event.preventDefault()
     resizeX = false
     resizeY = false
     if (edge.includes("top")) {
@@ -62,6 +66,8 @@ function startResizing(event: MouseEvent, edge:string) {
 }
 
 function resize(event: MouseEvent) {
+    event.stopPropagation()
+    event.preventDefault()
     const imc = toImageCoordinates(event)
     const xm = Math.round(imc.x)
     const ym = Math.round(imc.y)
