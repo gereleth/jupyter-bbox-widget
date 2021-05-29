@@ -108,6 +108,12 @@
       on:mousemove={handleMouseMove}
       on:mouseup={handleMouseUp}
       >
+      <defs>
+        <filter x="0" y="0" width="1" height="1" id="bg-text">
+          <feFlood flood-color="rgba(255,255,255,0.5)"/>
+          <feComposite in="SourceGraphic" operator="xor" />
+        </filter>
+      </defs>
       {#each $bboxes as bbox, i}
       <g transition:fade={{duration:100}}>
         <BBox 

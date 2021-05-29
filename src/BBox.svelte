@@ -99,6 +99,8 @@ $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]
 </script>
 
 
+<text filter="url(#bg-text)" fill="black" x="{x*scaleX}" y="{y*scaleY-4}">{label}</text>
+<text x="{x*scaleX}" y="{y*scaleY-4}" fill="#333" on:mousedown={relabel}>{label}</text>
 <rect width="{width*scaleX}" 
     height="{height*scaleY}"
     style="fill-opacity:{opacity};stroke-width:{strokeWidth};stroke:{color};" 
@@ -142,7 +144,7 @@ $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]
     class="bottom-right"
     on:mousedown={e=>startResizing(e, "bottom-right")}
     />
-<text x="{x*scaleX}" y="{y*scaleY-4}" fill="{color}" on:mousedown={relabel}>{label}</text>
+
 <text x="{(x+width)*scaleX-13}" y="{y*scaleY-4}" fill="{color}" on:mousedown={remove}>🗙</text>
 
 <style>
