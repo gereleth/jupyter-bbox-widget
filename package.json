@@ -44,19 +44,19 @@
     "dev": "webpack-cli serve --inline --hot --progress --content-base ./mock --open -o ./mock"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1.1.10 || ^2 || ^3"
+    "@jupyter-widgets/base": "^4.0.0"
   },
   "devDependencies": {
     "@phosphor/application": "^1.6.0",
     "@phosphor/widgets": "^1.6.0",
+    "@tsconfig/svelte": "^1.0.10",
     "@types/node": "^10.11.6",
     "@types/webpack-env": "^1.13.6",
     "@typescript-eslint/eslint-plugin": "^3.6.0",
     "@typescript-eslint/parser": "^3.6.0",
-    "@tsconfig/svelte": "^1.0.10",
     "@webpack-cli/serve": "^1.2.2",
     "acorn": "^7.2.0",
-    "css-loader": "^3.2.0",
+    "css-loader": "^5.2.6",
     "eslint": "^7.4.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -67,14 +67,14 @@
     "rimraf": "^2.6.2",
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.0.0",
+    "svelte": "^3.0.0",
+    "svelte-loader": "2.13.3",
+    "svelte-preprocess": "^4.7.0",
     "ts-loader": "^5.2.1",
     "typescript": "^4.2.4",
     "webpack": "^5.20.1",
     "webpack-cli": "^4.4.0",
-    "webpack-dev-server": "^3.11.2",
-    "svelte": "^3.0.0",
-    "svelte-loader": "2.13.3",
-    "svelte-preprocess": "^4.7.0"
+    "webpack-dev-server": "^3.11.2"
   },
   "jupyterlab": {
     "extension": "lib/plugin"
