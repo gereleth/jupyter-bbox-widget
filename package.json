@@ -12,9 +12,9 @@
     "lib/**/*.js",
     "dist/*.js"
   ],
-  "homepage": "https://github.com//jupyter-bbox-widget",
+  "homepage": "https://github.com/gereleth/jupyter-bbox-widget",
   "bugs": {
-    "url": "https://github.com//jupyter-bbox-widget/issues"
+    "url": "https://github.com/gereleth/jupyter-bbox-widget/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -25,7 +25,7 @@
   "types": "./lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com//jupyter-bbox-widget"
+    "url": "https://github.com/gereleth/jupyter-bbox-widget"
   },
   "scripts": {
     "build": "npm run build:nbextension",
