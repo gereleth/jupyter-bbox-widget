@@ -14,7 +14,22 @@ from ._frontend import module_name, module_version
 
 
 class BBoxWidget(DOMWidget):
-    """TODO: Add docstring here
+    """A widget for adding bounding box annotations to an image
+
+    Parameters
+    ----------
+    image: string
+        Path to the image file or image url.
+    classes: list of string
+        A list of classes.
+    colors: list of string
+        The colors to use for bounding boxes. 
+        Default value is 10 colors from matplotlib.cm.Tab10 colormap.
+    bboxes: list of dict
+        Annotations to display in the widget.
+        Expected keys for each annotation are `x`, `y`, `width`, `height` and `label`.
+        Example annotation could look like this:
+        `{'x': 100, 'y': 200, 'width': 100, 'height':200, 'label':'something'}`
     """
     _model_name = Unicode('BBoxModel').tag(sync=True)
     _model_module = Unicode(module_name).tag(sync=True)
