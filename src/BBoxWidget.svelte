@@ -89,11 +89,27 @@
       createdFromUI = false
     }
   }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    event.stopPropagation()
+    event.preventDefault()
+    if (event.code.startsWith('Digit')||event.code.startsWith('Numpad')) {
+      let num = Number(event.code.slice(-1))
+      if (num===0) {num = 10}
+      num -= 1
+      if (num < $classes.length) {
+        label = $classes[num]
+      }
+    }
+  }
   // choose first class as label when classes change
   $: label = $classes.length>0 ? $classes[0] : ''
 </script>
 
-<div class="wrapper">
+<div class="wrapper" 
+  tabindex="0"
+  on:keydown={(e)=>handleKeyDown(e)}
+>
   <div class="image"
     bind:clientHeight={imgHeight}
     bind:clientWidth={imgWidth}
@@ -147,6 +163,11 @@
         on:click={()=>label=_class}
         >
         {_class}
+        {#if i<9}
+           ({i+1})
+        {:else if  i===9}
+           (0)
+        {/if}
       </span>
     {/each}
   </div>
@@ -155,6 +176,8 @@
 <style>
   .wrapper {
     position: relative;
+    margin: 1px;
+    padding: 4px;
   }
   .image {
     display: table;
