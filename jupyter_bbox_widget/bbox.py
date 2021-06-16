@@ -45,3 +45,13 @@ class BBoxWidget(DOMWidget):
         '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
       ]).tag(sync=True)
     bboxes = List().tag(sync=True)
+
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.on_msg(self._handle_custom_msg)
+
+
+    def _handle_custom_msg(self, content, buffers):
+        if content['type'] == 'update_bboxes':
+            self.bboxes = content['bboxes']

@@ -3,8 +3,9 @@
   import { createValue } from './stores';
   import { fade } from 'svelte/transition';
   import type { Writable } from 'svelte/store';
+  import type { BBoxModel } from './widget';
 
-  export let model;
+  export let model:BBoxModel;
   let img:HTMLImageElement
   let imgHeight = 0
   let imgWidth = 0
@@ -73,10 +74,11 @@
   function updateBBoxes() {
     // python value doesn't get updated unless length of array changes
     // don't know why
-    // I add and remove a dummy bbox to transfer changes to python
-    const dummy = {x:0,y:0,width:0,height:0,label:''}
-    $bboxes = [...$bboxes, dummy]
-    $bboxes = $bboxes.slice(0, -1)
+    // Send a custom message through model to tell python about new values
+    model.send({
+      'type':'update_bboxes',
+      'bboxes': $bboxes,
+    }, {})
   }
   function remove(b:TBBox):void {
     $bboxes = $bboxes.filter(x=>x!==b)
