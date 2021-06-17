@@ -6,12 +6,14 @@
   import type { BBoxModel } from './widget';
 
   export let model:BBoxModel;
+  let wrapperDiv:HTMLDivElement
   let img:HTMLImageElement
   let imgHeight = 0
   let imgWidth = 0
   let naturalHeight = 0
   let naturalWidth = 0
   let showSVG = false
+  let activeBBoxIndex = -1
 
   type TBBox = {
     x: number,
@@ -41,6 +43,7 @@
   let label = ''
   let moveFn = null
   let createdFromUI = false
+  let moveDirections = new Set()
 
   function initSVG() {
     showSVG = true
@@ -49,7 +52,6 @@
   }
 
   function handleMouseDown(event: MouseEvent) {
-    event.preventDefault()
     const {x, y} = getImageCoordinates(event)
     const bbox = {
       x: Math.round(x), y:Math.round(y), 
@@ -90,6 +92,18 @@
     }
   }
 
+
+  const keyMapping = new Map([
+    ['KeyW', 'up'],
+    ['KeyA', 'left'],
+    ['KeyS', 'down'],
+    ['KeyD', 'right'],
+    ['KeyQ', 'shrink-width'],
+    ['KeyE', 'grow-width'],
+    ['KeyR', 'grow-height'],
+    ['KeyF', 'shrink-height'],
+  ])
+
   function handleKeyDown(event: KeyboardEvent) {
     event.stopPropagation()
     event.preventDefault()
@@ -100,6 +114,53 @@
       if (num < $classes.length) {
         label = $classes[num]
       }
+    } else if (event.code==="Escape") {
+      wrapperDiv.blur()
+    } else if (event.code==="Tab") {
+      const delta = event.shiftKey ? -1 : 1
+      activeBBoxIndex += delta
+      if (activeBBoxIndex>=$bboxes.length) {
+        activeBBoxIndex = -1
+      } else if (activeBBoxIndex===-2) {
+        activeBBoxIndex = $bboxes.length -1
+      }
+    } 
+    if (activeBBoxIndex>=0) {
+      let direction = keyMapping.get(event.code)
+      if (direction) {
+        moveDirections.add(direction)
+      }
+      if (event.code==="Delete") {
+        remove($bboxes[activeBBoxIndex])
+        if (activeBBoxIndex===$bboxes.length) {
+          activeBBoxIndex = -1
+        }
+      }
+      if (event.code==="KeyC") {
+        $bboxes[activeBBoxIndex].label = label
+      }
+      let delta = event.shiftKey ? 10 : 1
+      let dx = 0
+      let dy = 0
+      let dw = 0
+      let dh = 0
+      for (let direction of moveDirections) {
+        if (direction==='up') {dy -= delta}
+        else if (direction==='down') {dy += delta}
+        else if (direction==='right') {dx += delta}
+        else if (direction==='left') {dx -= delta}
+        else if (direction==='shrink-width') {dw -= 2*delta; dx += delta}
+        else if (direction==='grow-width') {dw += 2*delta; dx -= delta}
+        else if (direction==='shrink-height') {dh -= 2*delta; dy += delta}
+        else if (direction==='grow-height') {dh += 2*delta; dy -= delta}
+      }
+      if ((dx!==0)||(dy!==0)||(dw!==0)||(dh!==0)) {
+        $bboxes[activeBBoxIndex].x += dx
+        $bboxes[activeBBoxIndex].y += dy
+        $bboxes[activeBBoxIndex].width += dw
+        $bboxes[activeBBoxIndex].height += dh
+        updateBBoxes()
+      }
     }
   }
   // choose first class as label when classes change
@@ -108,7 +169,10 @@
 
 <div class="wrapper" 
   tabindex="0"
+  bind:this={wrapperDiv}
   on:keydown={(e)=>handleKeyDown(e)}
+  on:keyup={(e)=>moveDirections.delete(keyMapping.get(e.code))}
+  on:blur={()=>moveDirections.clear()}
 >
   <div class="image"
     bind:clientHeight={imgHeight}
@@ -145,6 +209,7 @@
           colors={$colors}
           scaleX={imgWidth/naturalWidth}
           scaleY={imgHeight/naturalHeight}
+          strokeWidth={activeBBoxIndex===i ? 3 : 2}
           on:remove={()=>remove(bbox)}
           on:move={(event)=>moveFn=event.detail}
           on:create={onCreateRect}
