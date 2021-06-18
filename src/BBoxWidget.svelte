@@ -50,6 +50,15 @@
     showSVG = true
     naturalWidth = img.naturalWidth
     naturalHeight = img.naturalHeight
+    // Sometimes after rerunning a cell that outputs the widget
+    // imgHeight and imgWidth are set to zero
+    // And the svg is not displayed (has 0 size)
+    // Don't know why bind:clientWidth works the first time
+    // but not the second
+    // Setting width and height here seems to work around this issue
+    const rect = img.getBoundingClientRect()
+    imgHeight = rect.height
+    imgWidth = rect.width
   }
 
   function handleMouseDown(event: MouseEvent) {

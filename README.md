@@ -105,12 +105,6 @@ widget.on_submit(save)
 
 The notebook in [`examples/introduction.ipynb`](examples/introduction.ipynb) has an example of how to use this widget together with `ipywidgets` to create a simple annotation workflow.
 
-## Known Issues
-
-Sometimes after rerunning a cell that outputs the widget you can see the image but no annotations and clicks don't create new bboxes. If this happens then you need to resize browser window so that image width changes. Then the widget should work again. I'm working on making this unnecessary.
-
-If you observe changes to bboxes with `widget.observe(my_function, names=['bboxes'])` then be aware that sometimes a dummy bbox may appear in the list. It looks like `{'x':0, 'y':0, 'width':0, 'height':0, 'label':''}`. The reason for this is that changes from moving or resizing bboxes don't get transfered from js to python. Only when the length of `bboxes` list changes does python get notified about this. So as a workaround I add and remove a dummy bbox to sync other edits. Hopefully I'll find a better way around this issue.
-
 ## Development Installation
 
 This project was inspired by a blogpost [Creating Reactive Jupyter Widgets With Svelte](https://cabreraalex.medium.com/creating-reactive-jupyter-widgets-with-svelte-ef2fb580c05) and was created based on [widget-svelte-cookiecutter](https://github.com/cabreraalex/widget-svelte-cookiecutter) template.
