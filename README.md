@@ -61,12 +61,47 @@ jupyter nbextension enable --py [--sys-prefix|--user|--system] jupyter_bbox_widg
 
 ## Usage
 
-Creating and editing annotations is done with the mouse:
+### Create and edit annotations with the mouse
 
 - click and drag to create a bbox
 - click and drag corners or edges to resize a bbox
 - click and drag inside a bbox to move it
 - in order to change a label select a new label below the image and click on label text
+
+### Keyboard shortcuts
+
+When you click inside the widget area it will gain focus and start receiving keyboard events. An outline usually indicates that the element is focused. Normal Jupyter keyboard shortcuts won't work in this state. To unfocus the widget area click outside it or press `Esc`.
+
+- Digit keys 1-9 and 0 select a class label.
+- `Tab` / `Shift-Tab` switch between bboxes. Active bbox is displayed with a thicker line.
+- `Esc` unfocuses the widget
+- `Enter` is the same as pressing Submit button
+- `Space` is the same as pressing Skip button
+- Keys acting on the active bbox (assuming a QWERTY keyboard, other layouts should use any keys in the same locations):
+    - `W` move up
+    - `A` move left
+    - `S` move down
+    - `D` move right
+    - `Q` shrink width
+    - `E` grow width
+    - `R` grow height
+    - `F` shrink height
+    - `C` assign selected class label
+    - Holding `Shift` while pressing movement keys will increase step size
+
+### Skip and Submit events
+
+You can define functions that will be called automatically when you press Skip or Submit buttons.
+
+```python
+def skip():
+    # move on to the next image
+def save():
+    # do stuff to save current annotations
+
+widget.on_skip(skip)
+widget.on_submit(save)
+```
 
 The notebook in [`examples/introduction.ipynb`](examples/introduction.ipynb) has an example of how to use this widget together with `ipywidgets` to create a simple annotation workflow.
 
