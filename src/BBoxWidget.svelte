@@ -245,18 +245,16 @@
   <div class="classes">
     <p>Classes:</p>
     {#each $classes as _class, i}
-      <span
+      <div
         class="class-label"
         style="color:{$colors[i%$colors.length]};border:{_class===label?1:0}px solid {$colors[i%$colors.length]}"
         on:click={()=>label=_class}
         >
         {_class}
-        {#if i<9}
-           ({i+1})
-        {:else if  i===9}
-           (0)
+        {#if i<=9}
+          <span class="key">{ (i+1)%10 }</span>
         {/if}
-      </span>
+      </div>
     {/each}
   </div>
   <div class="buttons">
@@ -298,11 +296,19 @@
     border-radius: 4px;
     padding: 4px;
     margin: 4px;
+    display: inline-block
   }
   .classes {
     margin-bottom: 10px;
   }
   .buttons {
     margin-top: 28px;
+  }
+  span.key {
+    border: 1px solid lightgray;
+    color: gray;
+    padding: 0px 3px;
+    font-size: 80%;
+    border-radius: 2px;
   }
 </style>
