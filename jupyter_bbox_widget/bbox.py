@@ -50,8 +50,24 @@ class BBoxWidget(DOMWidget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.on_msg(self._handle_custom_msg)
+        self.submit_callback = None
+        self.skip_callback = None
+
+
+    def on_submit(self, function):
+        self.submit_callback = function
+
+
+    def on_skip(self, function):
+        self.skip_callback = function
 
 
     def _handle_custom_msg(self, content, buffers):
         if content['type'] == 'update_bboxes':
             self.bboxes = content['bboxes']
+        elif content['type'] == 'submit':
+            if self.submit_callback:
+                self.submit_callback()
+        elif content['type'] == 'skip':
+            if self.skip_callback:
+                self.skip_callback()

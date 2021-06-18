@@ -1,5 +1,6 @@
 <script lang="ts">
   import BBox from './BBox.svelte';
+  import Button from './Button.svelte';
   import { createValue } from './stores';
   import { fade } from 'svelte/transition';
   import type { Writable } from 'svelte/store';
@@ -107,7 +108,7 @@
   function handleKeyDown(event: KeyboardEvent) {
     event.stopPropagation()
     event.preventDefault()
-    if (event.code.startsWith('Digit')||event.code.startsWith('Numpad')) {
+    if (event.code.startsWith('Digit')||/Numpad\d/.test(event.code)) {
       let num = Number(event.code.slice(-1))
       if (num===0) {num = 10}
       num -= 1
@@ -124,7 +125,11 @@
       } else if (activeBBoxIndex===-2) {
         activeBBoxIndex = $bboxes.length -1
       }
-    } 
+    } else if (event.code==="Space") {
+      skip()
+    } else if ((event.code==="Enter")||(event.code==="NumpadEnter")) {
+      submit()
+    }
     if (activeBBoxIndex>=0) {
       let direction = keyMapping.get(event.code)
       if (direction) {
@@ -162,6 +167,15 @@
         updateBBoxes()
       }
     }
+  }
+
+  function skip() {
+    model.send({type:'skip'}, {})
+    wrapperDiv.focus()
+  }
+  function submit() {
+    model.send({type:'submit'}, {})
+    wrapperDiv.focus()
   }
   // choose first class as label when classes change
   $: label = $classes.length>0 ? $classes[0] : ''
@@ -236,6 +250,21 @@
       </span>
     {/each}
   </div>
+  <div class="buttons">
+    <Button 
+      text="Skip" 
+      icon="arrow-right" 
+      tooltip="Keyboard shortcut: Space"
+      on:click={skip}
+    />
+    <Button 
+      text="Submit" 
+      icon="check" 
+      style="success"
+      tooltip="Keyboard shortcut: Enter"
+      on:click={submit}
+    />
+  </div>
 </div>
 
 <style>
@@ -263,5 +292,8 @@
   }
   .classes {
     margin-bottom: 10px;
+  }
+  .buttons {
+    margin-top: 28px;
   }
 </style>
