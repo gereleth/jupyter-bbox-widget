@@ -106,7 +106,7 @@
     }
     $bboxes = $bboxes.filter(x=>x!==b)
   }
-  
+
   function onCreateRect(event: CustomEvent) {
     if (createdFromUI) {
       moveFn = event.detail
@@ -211,6 +211,11 @@
     else {return sortedIndex+1}
   }
   $: sortedIndexToOriginal = sortedBBoxes.map((_,i)=>originalIndex(i))
+  
+  // Guard against deletion of bboxes from the python side
+  $: if (activeBBoxIndex >= $bboxes.length) {
+      activeBBoxIndex = -1
+    }
 </script>
 
 <div class="wrapper" 
