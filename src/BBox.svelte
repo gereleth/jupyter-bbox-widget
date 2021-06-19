@@ -109,6 +109,7 @@ $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]
 <rect width="{width*scaleX}" 
     height="{height*scaleY}"
     style="fill-opacity:{opacity};stroke-width:{isActive?3:2};stroke:{color};" 
+    shape-rendering="crispEdges"
     x={x*scaleX}
     y={y*scaleY}
     on:mousedown={startMoving}
