@@ -64,6 +64,7 @@
   }
 
   function handleMouseDown(event: MouseEvent) {
+    if (event.button!==0) {return}
     const {x, y} = getImageCoordinates(event)
     const bbox = {
       x: Math.round(x), y:Math.round(y), 
@@ -75,6 +76,7 @@
   }
 
   function handleMouseUp(event: MouseEvent) {
+    if (event.button!==0) {return}
     event.preventDefault()
     moveFn = null
     updateBBoxes()

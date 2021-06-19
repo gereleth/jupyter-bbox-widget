@@ -26,6 +26,7 @@
     let color = 'rgb(255,64,64)'
 
 function startMoving(event: MouseEvent) {
+    if (event.button!==0) {return}
     event.stopPropagation()
     movingX0 = event.clientX
     movingY0 = event.clientY
@@ -44,6 +45,7 @@ function move(event: MouseEvent) {
 }
 
 function startResizing(event: MouseEvent, edge:string) {
+    if (event.button!==0) {return}
     event.stopPropagation()
     resizeX = false
     resizeY = false
@@ -81,11 +83,13 @@ function resize(event: MouseEvent) {
 }
 
 function remove(event: MouseEvent) {
+    if (event.button!==0) {return}
     event.stopPropagation()
     dispatch('remove')
 }
 
 function relabel(event: MouseEvent) {
+    if (event.button!==0) {return}
     event.stopPropagation()
     dispatch('label')
 }
