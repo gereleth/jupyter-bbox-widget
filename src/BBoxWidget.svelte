@@ -316,8 +316,9 @@
   }
   svg {
     position: absolute;
-    top: 0;
-    left: 0;
+    /* keep equal to .wrapper padding*/
+    top: 4px; 
+    left: 4px;
   }
   .class-label {
     cursor: pointer;
