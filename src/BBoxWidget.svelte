@@ -89,11 +89,11 @@
   function updateBBoxes() {
     // python value doesn't get updated unless length of array changes
     // don't know why
-    // Send a custom message through model to tell python about new values
-    model.send({
-      'type':'update_bboxes',
-      'bboxes': $bboxes,
-    }, {})
+    // Use a workaround from 
+    // https://github.com/jupyter-widgets/ipywidgets/issues/2916
+    model.unset('bboxes', {silent:true})
+    model.set('bboxes', $bboxes)
+    model.save_changes()
   }
 
   function remove(b:TBBox):void {
