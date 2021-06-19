@@ -15,6 +15,8 @@
   let naturalWidth = 0
   let showSVG = false
   let activeBBoxIndex = -1
+  let sortedBBoxes:TBBox[] = []
+  let sortedIndexToOriginal:number[] = []
 
   type TBBox = {
     x: number,
@@ -69,6 +71,7 @@
     }
     createdFromUI = true
     $bboxes = [...$bboxes, bbox]
+    activeBBoxIndex = $bboxes.length - 1
   }
 
   function handleMouseUp(event: MouseEvent) {
@@ -92,9 +95,18 @@
       'bboxes': $bboxes,
     }, {})
   }
+
   function remove(b:TBBox):void {
+    const index = $bboxes.indexOf(b)
+    if (activeBBoxIndex>index) {
+      activeBBoxIndex -= 1
+    }
+    if (activeBBoxIndex==$bboxes.length-1) {
+      activeBBoxIndex = -1
+    }
     $bboxes = $bboxes.filter(x=>x!==b)
   }
+  
   function onCreateRect(event: CustomEvent) {
     if (createdFromUI) {
       moveFn = event.detail
@@ -146,9 +158,6 @@
       }
       if (event.code==="Delete") {
         remove($bboxes[activeBBoxIndex])
-        if (activeBBoxIndex===$bboxes.length) {
-          activeBBoxIndex = -1
-        }
       }
       if (event.code==="KeyC") {
         $bboxes[activeBBoxIndex].label = label
@@ -188,6 +197,20 @@
   }
   // choose first class as label when classes change
   $: label = $classes.length>0 ? $classes[0] : ''
+
+  // When a bbox is active it should be drawn on top of others
+  // So it has to be the last one in svg
+  $: sortedBBoxes = activeBBoxIndex===-1 ? $bboxes : [
+      ...$bboxes.filter((bbox, index) => index!==activeBBoxIndex), 
+      $bboxes[activeBBoxIndex]
+    ]
+  function originalIndex(sortedIndex:number) : number {
+    if (activeBBoxIndex===-1) {return sortedIndex}
+    else if (sortedIndex===$bboxes.length-1) {return activeBBoxIndex}
+    else if (sortedIndex<activeBBoxIndex) {return sortedIndex}
+    else {return sortedIndex+1}
+  }
+  $: sortedIndexToOriginal = sortedBBoxes.map((_,i)=>originalIndex(i))
 </script>
 
 <div class="wrapper" 
@@ -219,7 +242,7 @@
           <feComposite in="SourceGraphic" operator="xor" />
         </filter>
       </defs>
-      {#each $bboxes as bbox, i}
+      {#each sortedBBoxes as bbox, i (sortedIndexToOriginal[i])}
       <g transition:fade={{duration:100}}>
         <BBox 
           bind:x={bbox.x} 
@@ -232,9 +255,9 @@
           colors={$colors}
           scaleX={imgWidth/naturalWidth}
           scaleY={imgHeight/naturalHeight}
-          strokeWidth={activeBBoxIndex===i ? 3 : 2}
+          isActive={sortedIndexToOriginal[i]===activeBBoxIndex}
           on:remove={()=>remove(bbox)}
-          on:move={(event)=>moveFn=event.detail}
+          on:move={(event)=>{moveFn=event.detail; activeBBoxIndex=sortedIndexToOriginal[i]}}
           on:create={onCreateRect}
           on:label={()=>{bbox.label=label; updateBBoxes()}}
           />

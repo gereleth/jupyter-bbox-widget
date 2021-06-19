@@ -8,11 +8,12 @@
     export let label = ''
     export let colors:string[] = ['red']
     export let classes:string[] = []
-    export let strokeWidth = 2
+    // export let strokeWidth = 2
     export let opacity = 0
     export let toImageCoordinates
     export let scaleX = 1
     export let scaleY = 1
+    export let isActive = false
 
     const dispatch = createEventDispatcher()
 
@@ -26,7 +27,6 @@
 
 function startMoving(event: MouseEvent) {
     event.stopPropagation()
-    event.preventDefault()
     movingX0 = event.clientX
     movingY0 = event.clientY
     startX = x
@@ -45,7 +45,6 @@ function move(event: MouseEvent) {
 
 function startResizing(event: MouseEvent, edge:string) {
     event.stopPropagation()
-    event.preventDefault()
     resizeX = false
     resizeY = false
     if (edge.includes("top")) {
@@ -109,7 +108,7 @@ $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]
 <text x="{x*scaleX}" y="{y*scaleY-4}" fill="#333" on:mousedown={relabel}>{label}</text>
 <rect width="{width*scaleX}" 
     height="{height*scaleY}"
-    style="fill-opacity:{opacity};stroke-width:{strokeWidth};stroke:{color};" 
+    style="fill-opacity:{opacity};stroke-width:{isActive?3:2};stroke:{color};" 
     x={x*scaleX}
     y={y*scaleY}
     on:mousedown={startMoving}
