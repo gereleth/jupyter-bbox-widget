@@ -16,6 +16,10 @@
   let showSVG = false
   let sortedBBoxes:TBBox[] = []
   let sortedIndexToOriginal:number[] = []
+  let label = ''
+  let moveFn = null
+  let createdFromUI = false
+  let moveDirections = new Set()
 
   type TBBox = {
     x: number,
@@ -42,11 +46,6 @@
     const y = (event.clientY - rect.top)*naturalHeight/imgHeight;
     return { x: x, y: y }
   }
-
-  let label = ''
-  let moveFn = null
-  let createdFromUI = false
-  let moveDirections = new Set()
 
   function initSVG() {
     showSVG = true
@@ -109,7 +108,7 @@
     $bboxes = $bboxes.filter(x=>x!==b)
   }
 
-  function onCreateRect(event: CustomEvent) {
+  function onCreateBBox(event: CustomEvent) {
     if (createdFromUI) {
       moveFn = event.detail
       createdFromUI = false
@@ -281,7 +280,7 @@
             isActive={sortedIndexToOriginal[i]===$selected_index}
             on:remove={()=>remove(bbox)}
             on:move={(event)=>{moveFn=event.detail; $selected_index=sortedIndexToOriginal[i]}}
-            on:create={onCreateRect}
+            on:create={onCreateBBox}
             on:label={()=>{bbox.label=label; updateBBoxes()}}
             />
           </g>
