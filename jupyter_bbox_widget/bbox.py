@@ -53,13 +53,23 @@ class BBoxWidget(DOMWidget):
         self.on_msg(self._handle_custom_msg)
         self.submit_callback = None
         self.skip_callback = None
+        self._attached_widgets = {}
+        self.observe(self._handle_select, names=['selected_index'])
 
 
     def on_submit(self, function):
+        """Specify a function that will be called when the user presses Submit button
+
+        The function will be called with no arguments.
+        """
         self.submit_callback = function
 
 
     def on_skip(self, function):
+        """Specify a function that will be called when the user presses Skip button
+
+        The function will be called with no arguments.
+        """
         self.skip_callback = function
 
 
@@ -70,3 +80,70 @@ class BBoxWidget(DOMWidget):
         elif content['type'] == 'skip':
             if self.skip_callback:
                 self.skip_callback()
+
+
+    def attach(self, widget, name=None, default_value=None):
+        """ Attach another widget to record additional bbox properties
+
+        Assume bbox is the currently selected bbox.
+        The attached widget's value will be set to bbox[name].
+        When the attached widget's value is changed then the new value will
+        be saved in bbox[name].
+        When no bbox is selected then the attached widget will be disabled.
+
+        Parameters:
+
+        widget: ipywidgets widget
+            any widget like a slider, a text field, a checkbox and so on
+        name: str or None
+            name of the property associated with this widget. 
+            If None then will be taken from `widget.description`.
+        default_value: any valid widget value or None
+            default property value to set on bboxes that don't have it yet.
+            If None then will be taken from `widget.value`.
+        """
+        if default_value is None:
+            default_value = widget.value
+        if name is None:
+            name = widget.description
+        self._attached_widgets[name] = (widget, default_value)
+        def handle_change(change):
+            value = change['new']
+            self._set_bbox_property(
+                self.selected_index, 
+                name, 
+                value
+            )
+        widget.observe(handle_change, names=['value'])
+
+
+    def _handle_select(self, change):
+        """Handle selected bbox change.
+
+        Set values corresponding to the selected bbox on attached widgets.        
+        """
+        index = change['new']
+        if index == -1:
+            # no bbox selected, disable widgets
+            for _, (widget, default_value) in self._attached_widgets.items():
+                widget.value = default_value
+                widget.disabled = True
+        else:
+            # bbox at index is selected
+            for name, (widget, default_value) in self._attached_widgets.items():
+                widget.disabled = False
+                value = self.bboxes[index].get(name, None)
+                if value is None:
+                    self._set_bbox_property(index, name, default_value)
+                    value = default_value
+                widget.value = value
+
+
+    def _set_bbox_property(self, index, name, value):
+        """Set property name of bbox at index to value
+        """
+        # editing bboxes in place doesn't get changes synced to js
+        # enter this trick that seems to do the job
+        ls = [{**bbox} for bbox in self.bboxes]
+        ls[index][name] = value
+        self.bboxes = ls
