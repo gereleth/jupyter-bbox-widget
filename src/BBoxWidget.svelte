@@ -227,66 +227,6 @@
   on:keyup={(e)=>moveDirections.delete(keyMapping.get(e.code))}
   on:blur={()=>moveDirections.clear()}
 >
-  <div class="image"
-    bind:clientHeight={imgHeight}
-    bind:clientWidth={imgWidth}
-  >
-    <img src="{$image}" 
-      alt="annotate me" 
-      bind:this={img}
-      on:load={initSVG}
-  />
-  </div>
-  {#if showSVG}
-    <svg width="{imgWidth}" height="{imgHeight}"
-      on:mousedown={handleMouseDown}
-      on:mousemove={handleMouseMove}
-      on:mouseup={handleMouseUp}
-      >
-      <defs>
-        <filter x="0" y="0" width="1" height="1" id="bg-text">
-          <feFlood flood-color="rgba(255,255,255,0.5)"/>
-          <feComposite in="SourceGraphic" operator="xor" />
-        </filter>
-      </defs>
-      {#each sortedBBoxes as bbox, i (sortedIndexToOriginal[i])}
-      <g transition:fade={{duration:100}}>
-        <BBox 
-          bind:x={bbox.x} 
-          bind:y={bbox.y} 
-          bind:width={bbox.width} 
-          bind:height={bbox.height} 
-          bind:label={bbox.label}
-          toImageCoordinates={getImageCoordinates}
-          classes={$classes}
-          colors={$colors}
-          scaleX={imgWidth/naturalWidth}
-          scaleY={imgHeight/naturalHeight}
-          isActive={sortedIndexToOriginal[i]===$selected_index}
-          on:remove={()=>remove(bbox)}
-          on:move={(event)=>{moveFn=event.detail; $selected_index=sortedIndexToOriginal[i]}}
-          on:create={onCreateRect}
-          on:label={()=>{bbox.label=label; updateBBoxes()}}
-          />
-        </g>
-      {/each}
-    </svg>
-  {/if}
-  <div class="classes">
-    <p>Classes:</p>
-    {#each $classes as _class, i}
-      <div
-        class="class-label"
-        style="color:{$colors[i%$colors.length]};border:{_class===label?1:0}px solid {$colors[i%$colors.length]}"
-        on:click={()=>label=_class}
-        >
-        {_class}
-        {#if i<=9}
-          <span class="key">{ (i+1)%10 }</span>
-        {/if}
-      </div>
-    {/each}
-  </div>
   <div class="buttons">
     <Button 
       text="Skip" 
@@ -302,6 +242,68 @@
       on:click={submit}
     />
   </div>
+  <div class="image">
+    <div class="image-measure"
+      bind:clientHeight={imgHeight}
+      bind:clientWidth={imgWidth}
+    >
+      <img src="{$image}" 
+        alt="annotate me" 
+        bind:this={img}
+        on:load={initSVG}
+    />
+    </div>
+    {#if showSVG}
+      <svg width="{imgWidth}" height="{imgHeight}"
+        on:mousedown={handleMouseDown}
+        on:mousemove={handleMouseMove}
+        on:mouseup={handleMouseUp}
+        >
+        <defs>
+          <filter x="0" y="0" width="1" height="1" id="bg-text">
+            <feFlood flood-color="rgba(255,255,255,0.5)"/>
+            <feComposite in="SourceGraphic" operator="xor" />
+          </filter>
+        </defs>
+        {#each sortedBBoxes as bbox, i (sortedIndexToOriginal[i])}
+        <g transition:fade={{duration:100}}>
+          <BBox 
+            bind:x={bbox.x} 
+            bind:y={bbox.y} 
+            bind:width={bbox.width} 
+            bind:height={bbox.height} 
+            bind:label={bbox.label}
+            toImageCoordinates={getImageCoordinates}
+            classes={$classes}
+            colors={$colors}
+            scaleX={imgWidth/naturalWidth}
+            scaleY={imgHeight/naturalHeight}
+            isActive={sortedIndexToOriginal[i]===$selected_index}
+            on:remove={()=>remove(bbox)}
+            on:move={(event)=>{moveFn=event.detail; $selected_index=sortedIndexToOriginal[i]}}
+            on:create={onCreateRect}
+            on:label={()=>{bbox.label=label; updateBBoxes()}}
+            />
+          </g>
+        {/each}
+      </svg>
+    {/if}
+  </div>
+  <div class="classes">
+    <p>Classes:</p>
+    {#each $classes as _class, i}
+      <div
+        class="class-label"
+        style="color:{$colors[i%$colors.length]};border:{_class===label?1:0}px solid {$colors[i%$colors.length]}"
+        on:click={()=>label=_class}
+        >
+        {_class}
+        {#if i<=9}
+          <span class="key">{ (i+1)%10 }</span>
+        {/if}
+      </div>
+    {/each}
+  </div>
 </div>
 
 <style>
@@ -311,6 +313,9 @@
     padding: 4px;
   }
   .image {
+    position: relative;
+  }
+  .image-measure {
     display: table;
   }
   img {
@@ -318,9 +323,8 @@
   }
   svg {
     position: absolute;
-    /* keep equal to .wrapper padding*/
-    top: 4px; 
-    left: 4px;
+    top: 0; 
+    left: 0;
   }
   .class-label {
     cursor: pointer;
@@ -333,7 +337,7 @@
     margin-bottom: 10px;
   }
   .buttons {
-    margin-top: 28px;
+    margin-bottom: 10px;
   }
   span.key {
     border: 1px solid lightgray;
