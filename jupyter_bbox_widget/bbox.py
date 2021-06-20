@@ -9,7 +9,7 @@ TODO: Add module docstring
 """
 
 from ipywidgets import DOMWidget
-from traitlets import List, Unicode
+from traitlets import Integer, List, Unicode
 from ._frontend import module_name, module_version
 
 
@@ -45,6 +45,7 @@ class BBoxWidget(DOMWidget):
         '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
       ]).tag(sync=True)
     bboxes = List().tag(sync=True)
+    selected_index = Integer(-1).tag(sync=True)
 
 
     def __init__(self, **kwargs):

@@ -14,7 +14,6 @@
   let naturalHeight = 0
   let naturalWidth = 0
   let showSVG = false
-  let activeBBoxIndex = -1
   let sortedBBoxes:TBBox[] = []
   let sortedIndexToOriginal:number[] = []
 
@@ -35,6 +34,7 @@
         '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
       ])
   let bboxes:Writable<TBBox[]> = createValue(model, 'bboxes', [])
+  let selected_index:Writable<number> = createValue(model, 'selected_index', -1)
 
   function getImageCoordinates(event: MouseEvent) {
     const rect = img.getBoundingClientRect()
@@ -72,7 +72,7 @@
     }
     createdFromUI = true
     $bboxes = [...$bboxes, bbox]
-    activeBBoxIndex = $bboxes.length - 1
+    $selected_index = $bboxes.length - 1
   }
 
   function handleMouseUp(event: MouseEvent) {
@@ -100,11 +100,11 @@
 
   function remove(b:TBBox):void {
     const index = $bboxes.indexOf(b)
-    if (activeBBoxIndex>index) {
-      activeBBoxIndex -= 1
+    if ($selected_index>index) {
+      $selected_index -= 1
     }
-    if (activeBBoxIndex==$bboxes.length-1) {
-      activeBBoxIndex = -1
+    if ($selected_index==$bboxes.length-1) {
+      $selected_index = -1
     }
     $bboxes = $bboxes.filter(x=>x!==b)
   }
@@ -142,27 +142,27 @@
       wrapperDiv.blur()
     } else if (event.code==="Tab") {
       const delta = event.shiftKey ? -1 : 1
-      activeBBoxIndex += delta
-      if (activeBBoxIndex>=$bboxes.length) {
-        activeBBoxIndex = -1
-      } else if (activeBBoxIndex===-2) {
-        activeBBoxIndex = $bboxes.length -1
+      $selected_index += delta
+      if ($selected_index>=$bboxes.length) {
+        $selected_index = -1
+      } else if ($selected_index===-2) {
+        $selected_index = $bboxes.length -1
       }
     } else if (event.code==="Space") {
       skip()
     } else if ((event.code==="Enter")||(event.code==="NumpadEnter")) {
       submit()
     }
-    if (activeBBoxIndex>=0) {
+    if ($selected_index>=0) {
       let direction = keyMapping.get(event.code)
       if (direction) {
         moveDirections.add(direction)
       }
       if (event.code==="Delete") {
-        remove($bboxes[activeBBoxIndex])
+        remove($bboxes[$selected_index])
       }
       if (event.code==="KeyC") {
-        $bboxes[activeBBoxIndex].label = label
+        $bboxes[$selected_index].label = label
       }
       let delta = event.shiftKey ? 10 : 1
       let dx = 0
@@ -180,10 +180,10 @@
         else if (direction==='grow-height') {dh += 2*delta; dy -= delta}
       }
       if ((dx!==0)||(dy!==0)||(dw!==0)||(dh!==0)) {
-        $bboxes[activeBBoxIndex].x += dx
-        $bboxes[activeBBoxIndex].y += dy
-        $bboxes[activeBBoxIndex].width += dw
-        $bboxes[activeBBoxIndex].height += dh
+        $bboxes[$selected_index].x += dx
+        $bboxes[$selected_index].y += dy
+        $bboxes[$selected_index].width += dw
+        $bboxes[$selected_index].height += dh
         updateBBoxes()
       }
     }
@@ -202,21 +202,21 @@
 
   // When a bbox is active it should be drawn on top of others
   // So it has to be the last one in svg
-  $: sortedBBoxes = activeBBoxIndex===-1 ? $bboxes : [
-      ...$bboxes.filter((bbox, index) => index!==activeBBoxIndex), 
-      $bboxes[activeBBoxIndex]
+  $: sortedBBoxes = $selected_index===-1 ? $bboxes : [
+      ...$bboxes.filter((bbox, index) => index!==$selected_index), 
+      $bboxes[$selected_index]
     ]
   function originalIndex(sortedIndex:number) : number {
-    if (activeBBoxIndex===-1) {return sortedIndex}
-    else if (sortedIndex===$bboxes.length-1) {return activeBBoxIndex}
-    else if (sortedIndex<activeBBoxIndex) {return sortedIndex}
+    if ($selected_index===-1) {return sortedIndex}
+    else if (sortedIndex===$bboxes.length-1) {return $selected_index}
+    else if (sortedIndex<$selected_index) {return sortedIndex}
     else {return sortedIndex+1}
   }
   $: sortedIndexToOriginal = sortedBBoxes.map((_,i)=>originalIndex(i))
   
   // Guard against deletion of bboxes from the python side
-  $: if (activeBBoxIndex >= $bboxes.length) {
-      activeBBoxIndex = -1
+  $: if ($selected_index >= $bboxes.length) {
+      $selected_index = -1
     }
 </script>
 
@@ -262,9 +262,9 @@
           colors={$colors}
           scaleX={imgWidth/naturalWidth}
           scaleY={imgHeight/naturalHeight}
-          isActive={sortedIndexToOriginal[i]===activeBBoxIndex}
+          isActive={sortedIndexToOriginal[i]===$selected_index}
           on:remove={()=>remove(bbox)}
-          on:move={(event)=>{moveFn=event.detail; activeBBoxIndex=sortedIndexToOriginal[i]}}
+          on:move={(event)=>{moveFn=event.detail; $selected_index=sortedIndexToOriginal[i]}}
           on:create={onCreateRect}
           on:label={()=>{bbox.label=label; updateBBoxes()}}
           />
