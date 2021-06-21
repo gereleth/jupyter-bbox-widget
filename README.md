@@ -72,12 +72,14 @@ jupyter nbextension enable --py [--sys-prefix|--user|--system] jupyter_bbox_widg
 
 When you click inside the widget area it will gain focus and start receiving keyboard events. An outline usually indicates that the element is focused. Normal Jupyter keyboard shortcuts won't work in this state. To unfocus the widget area click outside it or press `Esc`.
 
+Some shortcuts act on the selected bbox. New bboxes are selected automatically when created. You can also select a bbox by clicking on it. Selected bbox is displayed on top of others and with a thicker border.
+
 - Digit keys 1-9 and 0 select a class label.
-- `Tab` / `Shift-Tab` switch between bboxes. Active bbox is displayed with a thicker line.
 - `Esc` unfocuses the widget
 - `Enter` is the same as pressing Submit button
 - `Space` is the same as pressing Skip button
-- Keys acting on the active bbox (assuming a QWERTY keyboard, other layouts should use any keys in the same locations):
+- `Tab` / `Shift-Tab` select next/previous bbox.
+- Keys acting on the selected bbox (assuming a QWERTY keyboard, other layouts should use any keys in the same locations):
     - `W` move up
     - `A` move left
     - `S` move down
@@ -91,7 +93,7 @@ When you click inside the widget area it will gain focus and start receiving key
 
 ### Skip and Submit events
 
-You can define functions that will be called automatically when you press Skip or Submit buttons.
+You can define functions that will be called automatically when you press Skip or Submit buttons. This is useful for creating a workflow for annotating multiple images. 
 
 ```python
 def skip():
@@ -103,7 +105,29 @@ widget.on_skip(skip)
 widget.on_submit(save)
 ```
 
-The notebook in [`examples/introduction.ipynb`](examples/introduction.ipynb) has an example of how to use this widget together with `ipywidgets` to create a simple annotation workflow.
+There is an example of a simple annotation workflow in [`examples/introduction.ipynb`](examples/introduction.ipynb) notebook.
+
+### Recording additional data
+
+Sometimes you need to record more info about an object than just a location and a class label. For example, you might want to specify whether the object is in focus or blurred, record its size or other properties.
+
+Let's say we want to apply a rating on a scale from 1 to 5 to every object in the image. We create a slider widget to edit the rating values:
+
+```python
+w_rating = widgets.IntSlider(value=3, min=1, max=5, description='Rating')
+```
+
+And we attach it to the bbox widget.
+
+```python
+widget.attach(w_rating, name='rating')
+```
+
+As a result all bboxes created afterwards will have a `rating` property and the `w_rating` widget can be used to display and manipulate the rating of the currently selected bbox.
+
+Any number and any kind of `ipywidgets` widgets may be used in this way for creating richer annotations - number inputs, text inputs, checkboxes and so on (see [widget list](https://ipywidgets.readthedocs.io/en/stable/examples/Widget%20List.html)). 
+
+The notebook in [`examples/introduction.ipynb`](examples/introduction.ipynb) has an example and a more detailed explanation of this feature.
 
 ## Development Installation
 
