@@ -59,6 +59,8 @@ cmdclass['jsdeps'] = combine_commands(
     ensure_targets(jstargets),
 )
 
+with open(pjoin(HERE, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup_args = dict(
     name=name,
@@ -91,6 +93,8 @@ setup_args = dict(
     ],
     entry_points={
     },
+    long_description=long_description,
+    long_description_content_type='text/markdown',
 )
 
 if __name__ == '__main__':
