@@ -1,7 +1,8 @@
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gereleth/jupyter-bbox-widget/HEAD?filepath=examples%2Fintroduction.ipynb)
+
 # jupyter\_bbox\_widget
 
-A Jupyter widget for annotating images with bounding boxes.
-
+A Jupyter widget for annotating images with bounding boxes. **See a [live demo on Binder](https://mybinder.org/v2/gh/gereleth/jupyter-bbox-widget/HEAD?filepath=examples%2Fintroduction.ipynb).**
 
 ```python
 from jupyter_bbox_widget import BBoxWidget
