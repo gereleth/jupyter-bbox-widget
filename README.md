@@ -46,13 +46,6 @@ You can install using `pip`:
 pip install jupyter_bbox_widget
 ```
 
-Or if you use jupyterlab:
-
-```bash
-pip install jupyter_bbox_widget
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
-```
-
 If you are using Jupyter Notebook 5.2 or earlier, you may also need to enable
 the nbextension:
 
