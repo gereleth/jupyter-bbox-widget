@@ -101,6 +101,10 @@ widget.on_submit(save)
 
 There is an example of a simple annotation workflow in [`examples/introduction.ipynb`](https://github.com/gereleth/jupyter-bbox-widget/blob/main/examples/introduction.ipynb) notebook.
 
+### View only mode
+
+You can disable editing of annotations by setting `widget.view_only = True`. This is useful for viewing annotation outputs without accidentally changing them.
+
 ### Recording additional data
 
 Sometimes you need to record more info about an object than just a location and a class label. For example, you might want to specify whether the object is in focus or blurred, record its size or other properties.
