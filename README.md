@@ -99,7 +99,7 @@ widget.on_skip(skip)
 widget.on_submit(save)
 ```
 
-There is an example of a simple annotation workflow in [`examples/introduction.ipynb`](examples/introduction.ipynb) notebook.
+There is an example of a simple annotation workflow in [`examples/introduction.ipynb`](https://github.com/gereleth/jupyter-bbox-widget/blob/main/examples/introduction.ipynb) notebook.
 
 ### Recording additional data
 
@@ -121,7 +121,7 @@ As a result all bboxes created afterwards will have a `rating` property and the 
 
 Any number and any kind of `ipywidgets` widgets may be used in this way for creating richer annotations - number inputs, text inputs, checkboxes and so on (see [widget list](https://ipywidgets.readthedocs.io/en/stable/examples/Widget%20List.html)). 
 
-The notebook in [`examples/introduction.ipynb`](examples/introduction.ipynb) has an example and a more detailed explanation of this feature.
+The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupyter-bbox-widget/blob/main/examples/introduction.ipynb) has an example and a more detailed explanation of this feature.
 
 ## Development Installation
 
