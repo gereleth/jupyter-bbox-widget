@@ -9,7 +9,7 @@ TODO: Add module docstring
 """
 
 from ipywidgets import DOMWidget
-from traitlets import Integer, List, Unicode
+from traitlets import Integer, List, Unicode, Bool
 from ._frontend import module_name, module_version
 
 
@@ -30,6 +30,9 @@ class BBoxWidget(DOMWidget):
         Expected keys for each annotation are `x`, `y`, `width`, `height` and `label`.
         Example annotation could look like this:
         `{'x': 100, 'y': 200, 'width': 100, 'height':200, 'label':'something'}`
+    view_only: boolean
+        Show image and annotations in view only mode, without bbox interactions.
+        default: False
     """
     _model_name = Unicode('BBoxModel').tag(sync=True)
     _model_module = Unicode(module_name).tag(sync=True)
@@ -46,6 +49,7 @@ class BBoxWidget(DOMWidget):
       ]).tag(sync=True)
     bboxes = List().tag(sync=True)
     selected_index = Integer(-1).tag(sync=True)
+    view_only = Bool(False).tag(sync=True)
 
 
     def __init__(self, **kwargs):
