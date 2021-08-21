@@ -39,6 +39,7 @@
       ])
   let bboxes:Writable<TBBox[]> = createValue(model, 'bboxes', [])
   let selected_index:Writable<number> = createValue(model, 'selected_index', -1)
+  let view_only:Writable<boolean> = createValue(model, 'view_only', false)
 
   function getImageCoordinates(event: MouseEvent) {
     const rect = img.getBoundingClientRect()
@@ -63,6 +64,7 @@
   }
 
   function handleMouseDown(event: MouseEvent) {
+    if ($view_only) {return}
     if (event.button!==0) {return}
     const {x, y} = getImageCoordinates(event)
     const bbox = {
@@ -152,7 +154,7 @@
     } else if ((event.code==="Enter")||(event.code==="NumpadEnter")) {
       submit()
     }
-    if ($selected_index>=0) {
+    if (($selected_index>=0)&&(!$view_only)) {
       let direction = keyMapping.get(event.code)
       if (direction) {
         moveDirections.add(direction)
@@ -278,6 +280,7 @@
             scaleX={imgWidth/naturalWidth}
             scaleY={imgHeight/naturalHeight}
             isActive={sortedIndexToOriginal[i]===$selected_index}
+            view_only={$view_only}
             on:remove={()=>remove(bbox)}
             on:move={(event)=>{moveFn=event.detail; $selected_index=sortedIndexToOriginal[i]}}
             on:create={onCreateBBox}
