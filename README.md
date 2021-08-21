@@ -13,7 +13,7 @@ widget = BBoxWidget(
 widget
 ```
 
-![UI example](examples/ui_example.jpg)
+![UI example](https://raw.githubusercontent.com/gereleth/jupyter-bbox-widget/main/examples/ui_example.jpg)
 
 Create, edit, move, resize and delete bounding box annotations using the mouse.
 
