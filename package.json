@@ -1,6 +1,6 @@
 {
   "name": "jupyter-bbox-widget",
-  "version": "0.4.0",
+  "version": "0.3.1",
   "description": "A Jupyter widget for annotating images with bounding boxes",
   "keywords": [
     "jupyter",
