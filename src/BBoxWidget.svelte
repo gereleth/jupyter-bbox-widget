@@ -64,8 +64,11 @@
   }
 
   function handleMouseDown(event: MouseEvent) {
-    if ($view_only) {return}
     if (event.button!==0) {return}
+    if ($view_only) {
+      $selected_index = -1
+      return
+    }
     const {x, y} = getImageCoordinates(event)
     const bbox = {
       x: Math.round(x), y:Math.round(y), 
