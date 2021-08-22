@@ -113,11 +113,12 @@ class BBoxWidget(DOMWidget):
         self._attached_widgets[name] = (widget, default_value)
         def handle_change(change):
             value = change['new']
-            self._set_bbox_property(
-                self.selected_index, 
-                name, 
-                value
-            )
+            if self.selected_index != -1:
+                self._set_bbox_property(
+                    self.selected_index, 
+                    name, 
+                    value
+                )
         widget.observe(handle_change, names=['value'])
         # make attached widget consistent with current selected_index
         self._handle_select({'new': self.selected_index})
