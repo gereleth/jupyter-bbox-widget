@@ -40,6 +40,7 @@
   let bboxes:Writable<TBBox[]> = createValue(model, 'bboxes', [])
   let selected_index:Writable<number> = createValue(model, 'selected_index', -1)
   let view_only:Writable<boolean> = createValue(model, 'view_only', false)
+  let hide_buttons:Writable<boolean> = createValue(model, 'hide_buttons', false)
 
   function getImageCoordinates(event: MouseEvent) {
     const rect = img.getBoundingClientRect()
@@ -152,9 +153,9 @@
       } else if ($selected_index===-2) {
         $selected_index = $bboxes.length -1
       }
-    } else if (event.code==="Space") {
+    } else if ((event.code==="Space")&&(!$hide_buttons)) {
       skip()
-    } else if ((event.code==="Enter")||(event.code==="NumpadEnter")) {
+    } else if (((event.code==="Enter")||(event.code==="NumpadEnter"))&&(!$hide_buttons)) {
       submit()
     }
     if (($selected_index>=0)&&(!$view_only)) {
@@ -231,21 +232,23 @@
   on:keyup={(e)=>moveDirections.delete(keyMapping.get(e.code))}
   on:blur={()=>moveDirections.clear()}
 >
-  <div class="buttons">
-    <Button 
-      text="Skip" 
-      icon="arrow-right" 
-      tooltip="Keyboard shortcut: Space"
-      on:click={skip}
-    />
-    <Button 
-      text="Submit" 
-      icon="check" 
-      style="success"
-      tooltip="Keyboard shortcut: Enter"
-      on:click={submit}
-    />
-  </div>
+  {#if !$hide_buttons}
+    <div class="buttons">
+      <Button 
+        text="Skip" 
+        icon="arrow-right" 
+        tooltip="Keyboard shortcut: Space"
+        on:click={skip}
+      />
+      <Button 
+        text="Submit" 
+        icon="check" 
+        style="success"
+        tooltip="Keyboard shortcut: Enter"
+        on:click={submit}
+      />
+    </div>
+  {/if}
   <div class="image">
     <div class="image-measure"
       bind:clientHeight={imgHeight}

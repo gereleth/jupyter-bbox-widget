@@ -33,6 +33,9 @@ class BBoxWidget(DOMWidget):
     view_only: boolean
         Show image and annotations in view only mode, without bbox interactions.
         default: False
+    hide_buttons: boolean
+        Hide skip and submit buttons.
+        default: False
     """
     _model_name = Unicode('BBoxModel').tag(sync=True)
     _model_module = Unicode(module_name).tag(sync=True)
@@ -50,6 +53,7 @@ class BBoxWidget(DOMWidget):
     bboxes = List().tag(sync=True)
     selected_index = Integer(-1).tag(sync=True)
     view_only = Bool(False).tag(sync=True)
+    hide_buttons = Bool(False).tag(sync=True)
 
 
     def __init__(self, **kwargs):
