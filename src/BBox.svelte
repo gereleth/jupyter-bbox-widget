@@ -166,12 +166,29 @@ $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]
         class="bottom-right"
         on:mousedown={e=>startResizing(e, "bottom-right")}
     />
-    <text x="{(x+width)*scaleX-13}" y="{y*scaleY-4}" 
-        fill="{color}"
+    <!--Close icon-->
+    <line 
+        x1="{(x+width)*scaleX-10}"
+        x2="{(x+width)*scaleX}"
+        y1="{y*scaleY-13}"
+        y2="{y*scaleY-3}"
+        style="stroke-width:2;stroke:{color};" 
+        />
+    <line 
+        x1="{(x+width)*scaleX-10}"
+        x2="{(x+width)*scaleX}"
+        y1="{y*scaleY-3}"
+        y2="{y*scaleY-13}"
+        style="stroke-width:2;stroke:{color};" 
+        />
+    <rect width="12" 
+        height="12"
         class="clickable"
-        on:mousedown={remove}>
-        🗙
-    </text>
+        style="stroke-width:0;fill-opacity:0;" 
+        x={(x+width)*scaleX-11}
+        y={y*scaleY-14}
+        on:mousedown={remove}
+        />
 {/if}
 
 
@@ -186,7 +203,7 @@ $: color = colors[Math.max(0, classes.indexOf(label)%colors.length)]
     .left, .right {
         cursor: col-resize;
     }
-    text.clickable {
+    .clickable {
         cursor: pointer;
     }
     .top-left {
