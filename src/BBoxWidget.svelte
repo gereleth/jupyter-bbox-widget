@@ -168,6 +168,7 @@
       }
       if (event.code==="KeyC") {
         $bboxes[$selected_index].label = label
+        updateBBoxes()
       }
       let delta = event.shiftKey ? 10 : 1
       let dx = 0
