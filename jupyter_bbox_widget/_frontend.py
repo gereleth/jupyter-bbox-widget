@@ -9,4 +9,4 @@ Information about the frontend package of the widgets.
 """
 
 module_name = "jupyter-bbox-widget"
-module_version = "^0.3.2"
+module_version = "^0.3.3"
