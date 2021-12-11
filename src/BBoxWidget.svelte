@@ -329,6 +329,7 @@
   }
   img {
     display: block;
+    max-width: 100%;
   }
   svg {
     position: absolute;
