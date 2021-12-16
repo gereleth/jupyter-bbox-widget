@@ -16,7 +16,6 @@
   let showSVG = false
   let sortedBBoxes:TBBox[] = []
   let sortedIndexToOriginal:number[] = []
-  let label = ''
   let moveFn = null
   let createdFromUI = false
   let moveDirections = new Set()
@@ -33,6 +32,7 @@
   // that syncs with the named Traitlet in widget.ts and example.py.
   let image:Writable<string> = createValue(model, 'image', '')
   let classes:Writable<string[]> = createValue(model, 'classes', [''])
+  let label:Writable<string> = createValue(model, 'label', '')
   let colors:Writable<string[]> = createValue(model, 'colors', [
         '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', 
         '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
@@ -73,7 +73,7 @@
     const {x, y} = getImageCoordinates(event)
     const bbox = {
       x: Math.round(x), y:Math.round(y), 
-      width:0, height:0, label:label
+      width:0, height:0, label:$label
     }
     createdFromUI = true
     $bboxes = [...$bboxes, bbox]
@@ -141,7 +141,7 @@
       if (num===0) {num = 10}
       num -= 1
       if (num < $classes.length) {
-        label = $classes[num]
+        $label = $classes[num]
       }
     } else if (event.code==="Escape") {
       wrapperDiv.blur()
@@ -167,7 +167,7 @@
         remove($bboxes[$selected_index])
       }
       if (event.code==="KeyC") {
-        $bboxes[$selected_index].label = label
+        $bboxes[$selected_index].label = $label
         updateBBoxes()
       }
       let delta = event.shiftKey ? 10 : 1
@@ -204,7 +204,7 @@
     wrapperDiv.focus()
   }
   // choose first class as label when classes change
-  $: label = $classes.length>0 ? $classes[0] : ''
+  $: $label = $classes.length>0 ? $classes[0] : ''
 
   // When a bbox is active it should be drawn on top of others
   // So it has to be the last one in svg
@@ -291,7 +291,7 @@
             on:remove={()=>remove(bbox)}
             on:move={(event)=>{moveFn=event.detail; $selected_index=sortedIndexToOriginal[i]}}
             on:create={onCreateBBox}
-            on:label={()=>{bbox.label=label; updateBBoxes()}}
+            on:label={()=>{bbox.label=$label; updateBBoxes()}}
             />
           </g>
         {/each}
@@ -303,8 +303,8 @@
     {#each $classes as _class, i}
       <div
         class="class-label"
-        style="color:{$colors[i%$colors.length]};border:{_class===label?1:0}px solid {$colors[i%$colors.length]}"
-        on:click={()=>label=_class}
+        style="color:{$colors[i%$colors.length]};border:{_class===$label?1:0}px solid {$colors[i%$colors.length]}"
+        on:click={()=>$label=_class}
         >
         {_class}
         {#if i<=9}
