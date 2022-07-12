@@ -72,6 +72,7 @@ class BBoxWidget(DOMWidget):
         The function will be called with no arguments.
         """
         self.submit_callback = function
+        return function
 
 
     def on_skip(self, function):
@@ -80,6 +81,7 @@ class BBoxWidget(DOMWidget):
         The function will be called with no arguments.
         """
         self.skip_callback = function
+        return function
 
 
     def _handle_custom_msg(self, content, buffers):
