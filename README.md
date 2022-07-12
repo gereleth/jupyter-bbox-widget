@@ -127,6 +127,32 @@ Any number and any kind of `ipywidgets` widgets may be used in this way for crea
 
 The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupyter-bbox-widget/blob/main/examples/introduction.ipynb) has an example and a more detailed explanation of this feature.
 
+## Changelog
+
+- v0.5.0 
+    - enabled use of `widget.on_skip` and `widget.on_submit` methods as decorators
+- v0.4.0
+    - exposed selected class label to the python side as `widget.label`
+- v0.3.4
+    - set max-width: 100% on image so that it respects layout
+- v0.3.3
+    - fixed bboxes not updating after class change by keyboard shortcut
+- v0.3.2
+    - added `hide_buttons` option
+    - fixed bbox delete icon not displayed properly
+- v0.3.1
+    - unselect a bbox on click outside in view only mode
+    - fixed a bug with overwriting attached properties on unselect
+- v0.3.0
+    - added `view_only` mode
+- v0.2.0
+    - added Skip and Submit buttons
+    - added attach widget functionality for recording extra properties
+    - multiple fixes and improvements
+- v0.1.0
+    - initial release
+
+
 ## Development Installation
 
 This project was inspired by a blogpost [Creating Reactive Jupyter Widgets With Svelte](https://cabreraalex.medium.com/creating-reactive-jupyter-widgets-with-svelte-ef2fb580c05) and was created based on [widget-svelte-cookiecutter](https://github.com/cabreraalex/widget-svelte-cookiecutter) template.
