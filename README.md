@@ -90,13 +90,13 @@ Some shortcuts act on the selected bbox. New bboxes are selected automatically w
 You can define functions that will be called automatically when you press Skip or Submit buttons. This is useful for creating a workflow for annotating multiple images. 
 
 ```python
+@widget.on_skip
 def skip():
     # move on to the next image
-def save():
-    # do stuff to save current annotations
 
-widget.on_skip(skip)
-widget.on_submit(save)
+@widget.on_submit
+def save():
+    # do stuff to save current annotations and move on
 ```
 
 There is an example of a simple annotation workflow in [`examples/introduction.ipynb`](https://github.com/gereleth/jupyter-bbox-widget/blob/main/examples/introduction.ipynb) notebook.
