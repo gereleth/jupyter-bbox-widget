@@ -236,7 +236,7 @@
   {#if !$hide_buttons}
     <div class="buttons">
       <Button 
-        text="Skip" 
+        text="Check
         icon="arrow-right" 
         tooltip="Keyboard shortcut: Space"
         on:click={skip}
