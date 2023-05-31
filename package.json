@@ -44,11 +44,12 @@
     "dev": "webpack-cli serve --inline --hot --progress --content-base ./mock --open -o ./mock"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^4.0.0"
+    "@jupyter-widgets/base": "^1.1.10 || ^2 || ^3 || ^4 || ^5 || ^6"
   },
   "devDependencies": {
-    "@phosphor/application": "^1.6.0",
-    "@phosphor/widgets": "^1.6.0",
+    "@lumino/application": "^1.6.0",
+    "@lumino/widgets": "^1.6.0",
+    "@jupyter-widgets/base-manager": "^1.0.2",
     "@tsconfig/svelte": "^1.0.10",
     "@types/node": "^10.11.6",
     "@types/webpack-env": "^1.13.6",
@@ -74,9 +75,16 @@
     "typescript": "^4.2.4",
     "webpack": "^5.20.1",
     "webpack-cli": "^4.4.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^4.15.0"
   },
-  "jupyterlab": {
-    "extension": "lib/plugin"
+ "jupyterlab": {
+    "extension": "lib/plugin",
+    "outputDir": "jupyter_bbox_widget/labextension/",
+    "sharedPackages": {
+      "@jupyter-widgets/base": {
+        "bundled": false,
+        "singleton": true
+      }
+    }
   }
 }

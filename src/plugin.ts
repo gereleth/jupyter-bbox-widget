@@ -1,9 +1,9 @@
 // Copyright (c) gereleth
 // Distributed under the terms of the Modified BSD License.
 
-import type { Application, IPlugin } from '@phosphor/application';
+import type { Application, IPlugin } from '@lumino/application';
 
-import type { Widget } from '@phosphor/widgets';
+import type { Widget } from '@lumino/widgets';
 
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
