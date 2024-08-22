@@ -1,9 +1,8 @@
 from traitlets import Integer, List, Unicode, Bool, Bytes
 import anywidget
 from pathlib import Path
-import base64
 
-_DEV = True  # switch to False for production
+_DEV = False  # switch to False for production
 
 if _DEV:
     # from `npx vite`
@@ -45,7 +44,7 @@ class BBoxWidget(anywidget.AnyWidget):
     _css = CSS
 
     image = Unicode("").tag(sync=True)
-    image_data = Unicode("").tag(sync=True)
+    image_url = Unicode().tag(sync=True)
     image_bytes = Bytes().tag(sync=True)
     classes = List(Unicode).tag(sync=True)
     label = Unicode("").tag(sync=True)
@@ -170,11 +169,6 @@ class BBoxWidget(anywidget.AnyWidget):
     def _handle_image_change(self, change):
         image_location = change["new"]
         try:
-            path = Path(image_location)
-            data = path.read_bytes()
-            self.image_bytes = data
-            extension = path.suffix.lower()
-            encoded = str(base64.b64encode(data), "utf-8")
-            self.image_data = f"data:image/{extension};base64," + encoded
+            self.image_bytes = Path(image_location).read_bytes()
         except (FileNotFoundError, IsADirectoryError, OSError):
-            self.image_data = image_location
+            self.image_url = image_location

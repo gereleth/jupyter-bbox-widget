@@ -34,9 +34,9 @@
 
   // Creates a Svelte store (https://svelte.dev/tutorial/writable-stores)
   // that syncs with the named Traitlet in widget.ts and example.py.
-  let image = createValue(model, "image_data", "");
-  let image_src = null
+  let image_url = createValue(model, "image_url");
   let image_bytes = createValue(model, "image_bytes");
+  let image_src = null
   let classes = createValue(model, "classes", [""]);
   let label = createValue(model, "label", "");
   let colors = createValue(model, "colors", [
@@ -305,10 +305,14 @@
   $: if ($selected_index >= $bboxes.length) {
     $selected_index = -1;
   }
-  $: if (img) {
+  $: if (img && $image_bytes) {
+    URL.revokeObjectURL(image_src)
     const blob = new Blob([$image_bytes])
-    console.log(blob)
     image_src = URL.createObjectURL(blob)
+  }
+  $: if (img && $image_url) {
+    URL.revokeObjectURL(image_src)
+    image_src = $image_url
   }
 </script>
 
