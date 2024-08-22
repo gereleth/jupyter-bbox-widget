@@ -101,9 +101,42 @@ def save():
 
 There is an example of a simple annotation workflow in [`examples/introduction.ipynb`](https://github.com/gereleth/jupyter-bbox-widget/blob/main/examples/introduction.ipynb) notebook.
 
-### View only mode
+### Widget traits
 
-You can disable editing of annotations by setting `widget.view_only = True`. This is useful for viewing annotation outputs without accidentally changing them.
+You can edit widget state by assigning new values to any of these traits.
+
+- `image` - path to a local image file or a web link
+- `bboxes` - list of bounding boxes
+- `classes` - list of class labels
+- `colors` - list of colors to use for different classes
+- `label` - currently selected class label
+- `selected_index` - index of currently selected bbox. Equals `-1` when nothing is selected.
+- `hide_buttons` - default False, removes Skip and Submit buttons
+- `view_only` - default False, makes bboxes non-editable. This is useful for viewing annotation outputs without accidentally changing them.
+- `image_bytes` - binary data from the image file
+
+It's also possible to react to state changes by using the widget's [`observe`](https://ipywidgets.readthedocs.io/en/8.1.5/examples/Widget%20Events.html#registering-callbacks-to-trait-changes-in-the-kernel) method. For example, the following code will make the function `on_bbox_change` run every time the user edits bounding boxes:
+
+```python
+def on_bbox_change(change):
+    new_bboxes = change['new']
+    # do whatever with them
+
+widget.observe(on_bbox_change, names=['bboxes'])
+```
+
+### Displaying special images
+
+Maybe your images aren't files in a common format or require special handling to load. One way to show them is to save the image into an in-memory bytes buffer and feed that to `widget.image_bytes`.
+
+```python
+from io import BytesIO
+bytes_io = BytesIO()
+# for example, say img is a PIL image
+img.save(bytes_io, format='png')
+# feed that data to the widget
+widget.image_bytes = bytes_io.getvalue()
+```
 
 ### Recording additional data
 
@@ -131,6 +164,7 @@ The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupy
 
 - v0.6.0
     - rewritten to use [`anywidget`](https://github.com/manzt/anywidget) under the hood.
+    - revised the way images are sent to frontend
 - v0.5.0 
     - enabled use of `widget.on_skip` and `widget.on_submit` methods as decorators
 - v0.4.0
@@ -155,7 +189,7 @@ The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupy
     - initial release
 
 
-## Development Installation
+## Development Installation - TODO rewrite for anywidget
 
 This project was inspired by a blogpost [Creating Reactive Jupyter Widgets With Svelte](https://cabreraalex.medium.com/creating-reactive-jupyter-widgets-with-svelte-ef2fb580c05) and was created based on [widget-svelte-cookiecutter](https://github.com/cabreraalex/widget-svelte-cookiecutter) template.
 
