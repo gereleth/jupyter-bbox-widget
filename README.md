@@ -129,6 +129,8 @@ The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupy
 
 ## Changelog
 
+- v0.6.0
+    - rewritten to use [`anywidget`](https://github.com/manzt/anywidget) under the hood.
 - v0.5.0 
     - enabled use of `widget.on_skip` and `widget.on_submit` methods as decorators
 - v0.4.0
