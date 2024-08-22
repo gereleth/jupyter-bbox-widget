@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "jupyter_bbox_widget"
 version = "0.6.0"
 description = "A Jupyter widget for annotating images with bounding boxes"
+requires-python = ">=3.7"
 dependencies = ["anywidget>=0.9.0"]
 readme = "README.md"
 license = { file = "LICENSE.txt" }
@@ -26,8 +27,8 @@ artifacts = ["src/jupyter_bbox_widget/static/*"]
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = ["src/jupyter_bbox_widget/static/widget.js"]
-skip-if-exists = ["src/jupyter_bbox_widget/static/widget.js"]
+ensured-targets = ["src/jupyter_bbox_widget/static/main.mjs"]
+skip-if-exists = ["src/jupyter_bbox_widget/static/main.mjs"]
 dependencies = ["hatch-jupyter-builder>=0.5.0"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
