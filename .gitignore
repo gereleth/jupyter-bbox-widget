@@ -7,4 +7,8 @@ dist
 __pycache__
 .ipynb_checkpoints
 
+# Built js and css
 src/jupyter_bbox_widget/static
+
+# Example annotations
+examples/annotations.json
