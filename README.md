@@ -46,12 +46,7 @@ You can install using `pip`:
 pip install jupyter_bbox_widget
 ```
 
-If you are using Jupyter Notebook 5.2 or earlier, you may also need to enable
-the nbextension:
-
-```bash
-jupyter nbextension enable --py [--sys-prefix|--user|--system] jupyter_bbox_widget
-```
+A Jupyter server restart may be necessary for the widget to be properly discovered.
 
 ## Usage
 
@@ -103,16 +98,16 @@ There is an example of a simple annotation workflow in [`examples/introduction.i
 
 ### Widget traits
 
-You can edit widget state by assigning new values to any of these traits.
+Get or set widget state by using these traits.
 
 - `image` - path to a local image file or a web link
 - `bboxes` - list of bounding boxes
 - `classes` - list of class labels
 - `colors` - list of colors to use for different classes
 - `label` - currently selected class label
-- `selected_index` - index of currently selected bbox. Equals `-1` when nothing is selected.
-- `hide_buttons` - default False, removes Skip and Submit buttons
-- `view_only` - default False, makes bboxes non-editable. This is useful for viewing annotation outputs without accidentally changing them.
+- `selected_index` - index of currently selected bbox. Is `-1` when nothing is selected.
+- `hide_buttons` - default False, remove Skip and Submit buttons
+- `view_only` - default False, make bboxes non-editable. This is useful for viewing annotation outputs without accidentally changing them.
 - `image_bytes` - binary data from the image file
 
 It's also possible to react to state changes by using the widget's [`observe`](https://ipywidgets.readthedocs.io/en/8.1.5/examples/Widget%20Events.html#registering-callbacks-to-trait-changes-in-the-kernel) method. For example, the following code will make the function `on_bbox_change` run every time the user edits bounding boxes:
@@ -127,7 +122,7 @@ widget.observe(on_bbox_change, names=['bboxes'])
 
 ### Displaying special images
 
-Maybe your images aren't files in a common format or require special handling to load. One way to show them is to save the image into an in-memory bytes buffer and feed that to `widget.image_bytes`.
+Maybe your images aren't files in a common format or require special handling to load. One way to show them is to save the image into an in-memory bytes buffer and feed that to `widget.image_bytes`. I'm open to suggestions on how to make this more user-friendly.
 
 ```python
 from io import BytesIO
@@ -163,8 +158,8 @@ The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupy
 ## Changelog
 
 - v0.6.0
-    - rewritten to use [`anywidget`](https://github.com/manzt/anywidget) under the hood.
-    - revised the way images are sent to frontend
+    - rewritten to use [`anywidget`](https://github.com/manzt/anywidget) under the hood
+    - improved the way images are sent to frontend - it's no longer necessary to base64-encode local files in order to show them in Jupyter lab
 - v0.5.0 
     - enabled use of `widget.on_skip` and `widget.on_submit` methods as decorators
 - v0.4.0
@@ -189,53 +184,18 @@ The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupy
     - initial release
 
 
-## Development Installation - TODO rewrite for anywidget
+## Development Installation
 
-This project was inspired by a blogpost [Creating Reactive Jupyter Widgets With Svelte](https://cabreraalex.medium.com/creating-reactive-jupyter-widgets-with-svelte-ef2fb580c05) and was created based on [widget-svelte-cookiecutter](https://github.com/cabreraalex/widget-svelte-cookiecutter) template.
+This project was originally inspired by a blogpost [Creating Reactive Jupyter Widgets With Svelte](https://cabreraalex.medium.com/creating-reactive-jupyter-widgets-with-svelte-ef2fb580c05) but is currently based on [`anywidget`](https://github.com/manzt/anywidget) which provides a very nice developer experience.
 
-```bash
-# First install the python package. This will also build the JS packages.
-pip install -e .
-```
+Follow the steps below to make changes to this widget.
 
-When developing your extensions, you need to manually enable your extensions with the
-notebook / lab frontend. For lab, this is done by the command:
-
-```
-jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
-jupyter labextension install .
-```
-
-For classic notebook, you can run:
-
-```
-jupyter nbextension install --sys-prefix --symlink --overwrite --py jupyter_bbox_widget
-jupyter nbextension enable --sys-prefix --py jupyter_bbox_widget
-```
-
-Note that the `--symlink` flag doesn't work on Windows, so you will here have to run
-the `install` command every time that you rebuild your extension. For certain installations
-you might also need another flag instead of `--sys-prefix`, but we won't cover the meaning
-of those flags here.
-
-### How to see your changes
-
-#### Typescript:
-
-To continuously monitor the project for changes and automatically trigger a rebuild, start Jupyter in watch mode:
-
-```bash
-jupyter lab --watch
-```
-
-And in a separate session, begin watching the source directory for changes:
-
-```bash
-npm run watch
-```
-
-After a change wait for the build to finish and then refresh your browser and the changes should take effect.
-
-#### Python:
-
-If you make a change to the python code then you will need to restart the notebook kernel to have it take effect.
+1. Clone the repo, cd into its folder
+2. Activate the python environment you will use
+3. Install the python package with dev dependencies `pip install -e .[dev]`
+4. Run `npm install` to install JS dependencies.
+5. Run `npm run dev` to launch vite dev server. It will watch for any changes you make to the files in `svelte` folder.
+6. In `src/jupyter_bbox_widget/bbox.py` change the `DEV` variable to `True` so that the widget gets its JS code from the vite dev server.
+7. Launch jupyter lab with `ANYWIDGET_HMR=1 jupyter lab` to turn on anywidget's hot module reloading.
+8. Open a notebook with the widget and have fun making changes - you should see them in the UI as soon as you save a file.
+9. Run `hatch build` to build your widget when it's ready.
