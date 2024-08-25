@@ -2,7 +2,7 @@
 
 # jupyter\_bbox\_widget
 
-A Jupyter widget for annotating images with bounding boxes. **See a [live demo on Binder](https://mybinder.org/v2/gh/gereleth/jupyter-bbox-widget/HEAD?filepath=examples%2Fintroduction.ipynb&urlpath=tree%2Fexamples%2Fintroduction.ipynb).**
+A Jupyter widget for annotating images with bounding boxes. **Try a [live demo on Binder](https://mybinder.org/v2/gh/gereleth/jupyter-bbox-widget/HEAD?filepath=examples%2Fintroduction.ipynb)**.
 
 ```python
 from jupyter_bbox_widget import BBoxWidget
@@ -159,7 +159,7 @@ The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupy
 
 - v0.6.0
     - rewritten to use [`anywidget`](https://github.com/manzt/anywidget) under the hood
-    - improved the way images are sent to frontend - it's no longer necessary to base64-encode local files in order to show them in Jupyter lab
+    - improved the way images are sent to frontend - it's no longer necessary to base64-encode local files in order to show them in Jupyter Lab
 - v0.5.0 
     - enabled use of `widget.on_skip` and `widget.on_submit` methods as decorators
 - v0.4.0
