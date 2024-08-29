@@ -61,6 +61,7 @@ bbox_viewer = BBoxViewer()
 @widget.on_skip
 def skip_image():
     widget.image = get_next_image(widget.image, IMAGES)
+    bbox_viewer.data = widget.bboxes = []
 
 
 @widget.on_submit
