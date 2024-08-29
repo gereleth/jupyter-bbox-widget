@@ -155,6 +155,12 @@ Any number and any kind of `ipywidgets` widgets may be used in this way for crea
 
 The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupyter-bbox-widget/blob/main/examples/introduction.ipynb) has an example and a more detailed explanation of this feature.
 
+## Data Apps
+
+You can use jupyter\_bbox\_widget to create tools and data apps to support more advanced work flows:
+
+- [Panel Guide](examples/data_apps/panel/README.md)
+
 ## Changelog
 
 - v0.6.0
