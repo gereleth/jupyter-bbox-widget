@@ -66,7 +66,6 @@ def skip_image():
 
 @widget.on_submit
 def save():
-    print("save")
     if widget.selected_index >= 0:
         widget._set_bbox_property(widget.selected_index, "image", widget.image)
     bbox_viewer.data = widget.bboxes
