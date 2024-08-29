@@ -157,7 +157,7 @@ The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupy
 
 ## Data Apps
 
-You can use jupyter\_bbox\_widget to create tools and data apps to support more advanced work flows:
+You can use jupyter\_bbox\_widget to create tools and data driven apps to support more advanced work flows:
 
 - [Panel Guide](examples/data_apps/panel/README.md)
 
