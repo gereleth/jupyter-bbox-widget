@@ -131,13 +131,7 @@
   }
 
   function updateBBoxes() {
-    // python value doesn't get updated unless length of array changes
-    // don't know why
-    // Use a workaround from
-    // https://github.com/jupyter-widgets/ipywidgets/issues/2916
-    model.set("bboxes", [], { silent: true });
     model.set("bboxes", [...$bboxes]);
-    model.save_changes();
   }
 
   /**
@@ -305,7 +299,7 @@
   $: if ($selected_index >= $bboxes.length) {
     $selected_index = -1;
   }
-  $: if (img && $image_bytes) {
+  $: if (img && $image_bytes && $image_bytes.byteLength > 0) {
     URL.revokeObjectURL(image_src)
     const blob = new Blob([$image_bytes])
     image_src = URL.createObjectURL(blob)
