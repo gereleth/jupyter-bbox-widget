@@ -132,6 +132,7 @@
 
   function updateBBoxes() {
     model.set("bboxes", [...$bboxes]);
+    model.save_changes();
   }
 
   /**
