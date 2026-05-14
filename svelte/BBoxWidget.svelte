@@ -135,8 +135,9 @@
     // don't know why
     // Use a workaround from
     // https://github.com/jupyter-widgets/ipywidgets/issues/2916
+    const updatedBBoxes = $bboxes.map((bbox) => ({ ...bbox }));
     model.set("bboxes", [], { silent: true });
-    model.set("bboxes", [...$bboxes]);
+    model.set("bboxes", updatedBBoxes);
     model.save_changes();
   }
 
