@@ -15,6 +15,18 @@ widget
 
 ![UI example](https://raw.githubusercontent.com/gereleth/jupyter-bbox-widget/main/examples/ui_example.jpg)
 
+The widget also works in [marimo](https://marimo.io/) notebooks:
+
+```python
+from jupyter_bbox_widget import BBoxWidget
+import marimo as mo
+widget = mo.ui.AnyWidget(BBoxWidget(
+    image='fruit.jpg',
+    classes=['apple', 'orange', 'pear'],
+))
+widget
+```
+
 Create, edit, move, resize and delete bounding box annotations using the mouse.
 
 Use `widget.bboxes` to get current annotations values:
@@ -79,6 +91,16 @@ Some shortcuts act on the selected bbox. New bboxes are selected automatically w
     - `F` shrink height
     - `C` assign selected class label
     - Holding `Shift` while pressing movement keys will increase step size
+
+### Edit annotations programmatically
+
+In order to ensure that changes sync to the javascript side and are displayed in the widget UI use this pattern: copy the list of bounding boxes, do the edits, assign back.
+
+```python
+edited = [{**bbox} for bbox in widget.bboxes]
+edited[0]['x'] = 100
+widget.bboxes = edited
+```
 
 ### Skip and Submit events
 
@@ -157,6 +179,8 @@ The notebook in [`examples/introduction.ipynb`](https://github.com/gereleth/jupy
 
 ## Changelog
 
+- v0.7.0
+    - improved `marimo` compatibility making the widget usable in `marimo` notebooks.
 - v0.6.0
     - rewritten to use [`anywidget`](https://github.com/manzt/anywidget) under the hood
     - improved the way images are sent to frontend - it's no longer necessary to base64-encode local files in order to show them in Jupyter Lab
